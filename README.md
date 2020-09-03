@@ -1,2 +1,2 @@
-# Code401-Midterm
+# Seattle JavaScript Innovators
 Code401 Midterm Project
