@@ -1,4 +1,4 @@
-# Seattle JavaScript Innovators
+# Async and the Awaits
 Code401 Midterm Project
 
 
