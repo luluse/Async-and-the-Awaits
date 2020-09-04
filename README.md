@@ -78,3 +78,7 @@ As an overworked software developer, Guillermo is seeking a convenient way to co
     * Mention features you are working on after hours, so there’s less chance of a merge contract
     * Standup meetings are a good place for everyone to communicate issues they may be having, topics they would like to address, and generally making sure that         everyone is feeling safe creatively and psychologically Check in with everyone regarding their working plans for the day, can organize pair programming as         needed
 
+## Entity Relationship Diagram
+
+![database](./assets/erd.png)
+
