@@ -11,8 +11,9 @@ Code401 Midterm Project
 
 ### Project Proposal
 
-* The Seattle JavaScript Innovators (pending name change) have yet to settle upon a project. This 
-  document will be updated with more current information no later than Friday, September 4
+* Project Name - 
+
+* Project Short Description - 
 
 ### PM Tools
 
