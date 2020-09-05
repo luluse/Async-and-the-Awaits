@@ -4,7 +4,6 @@ require('dotenv').config();
 const inquirer = require('inquirer');
 
 const io = require('socket.io-client');
-const { get } = require('http');
 const serverChannel = io.connect('http://localhost:3001/server');
 
 serverChannel.emit('join', 'I just joined!');
