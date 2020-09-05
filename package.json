@@ -2,7 +2,7 @@
   "name": "Async-and-the-Awaits",
   "version": "1.0.0",
   "description": "Code401 Midterm Project",
-  "main": "index.js",
+  "main": "server/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,6 +15,9 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Async-and-the-Awaits/Async-and-the-Awaits/issues"
+  },
+  "engines": {
+    "node": "14.8.0"
   },
   "homepage": "https://github.com/Async-and-the-Awaits/Async-and-the-Awaits#readme"
 }
