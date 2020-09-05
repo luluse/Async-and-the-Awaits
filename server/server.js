@@ -19,6 +19,7 @@ server.on('connection', socket => {
 
   socket.on('message', messageFromClient => {
     console.log('Received: ', messageFromClient);
+    server.emit('received', `Got this message: ${messageFromClient}`);
   });
 });
 
