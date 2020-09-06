@@ -23,6 +23,11 @@ io.on('connection', socket => {
     socket.join(room);
   });
 
+  // something like:
+  // response = await function call of getInput or something similar
+  // Once you get their response, THEN do something like 'io.emit' - like, we recevied the message, and then we EMIT it to the socket
+  // Send RESPONSE back with the 'received' emit
+
   socket.on('message', messageFromClient => {
     console.log('Received: ', messageFromClient);
     io.emit('received', messageFromClient);
