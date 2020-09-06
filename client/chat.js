@@ -12,8 +12,9 @@ const serverChannel = io.connect(
 
 serverChannel.emit('join', 'I just joined!');
 
+// Server should send the message back to the sender as confirmation (for testing purposes only until we get it working)
 serverChannel.on('received', messageBackFromServer => {
-  console.log(messageBackFromServer);
+  console.log('Message Receipt from SERVER: ', messageBackFromServer);
 });
 
 let username = '';
@@ -41,4 +42,4 @@ async function getName() {
 }
 
 getName();
-getInput();
+getInput(); // Calling these here works locally - but as far as can tell NOT the same way in Heroku

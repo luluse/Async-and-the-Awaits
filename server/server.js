@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 const messageQueue = {};
 
 io.on('connection', socket => {
+  // This connection does not appear to be triggering even locally at this time - nothing logged
   console.log('Connected on: ', PORT, socket.id);
 
   socket.on('join', room => {
@@ -28,6 +29,7 @@ io.on('connection', socket => {
   // Once you get their response, THEN do something like 'io.emit' - like, we recevied the message, and then we EMIT it to the socket
   // Send RESPONSE back with the 'received' emit
 
+  // This code block is essentially for testing - the intention here is to log a message as "received" in the server (which should show up in Heroku logs) and THEN bounce that message BACK to the sender, as well (to see that it's actually been received by the server, at least)
   socket.on('message', messageFromClient => {
     console.log('Received: ', messageFromClient);
     io.emit('received', messageFromClient);
