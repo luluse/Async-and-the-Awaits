@@ -15,8 +15,8 @@ app.use(express.urlencoded({ extended: true }));
 
 const messageQueue = {};
 
-const io = require('socket.io')(process.env.PORT || 3002);
-const server = io.of('/server');
+// const io = require('socket.io')(process.env.PORT || 3002);
+// const server = io.of('/server');
 
 server.on('connection', socket => {
   // This connection does not appear to be triggering even locally at this time - nothing logged
