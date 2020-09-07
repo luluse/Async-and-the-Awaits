@@ -2,15 +2,19 @@
 
 require('dotenv').config();
 
-const http = require('http').createServererver();
+const http = require('http').createServer();
 const io = require('socket.io')(server);
-const port = process.env.PORT || 3001;
+const port = 3001;
 
-io.on('connection', socket =>{
+io.on('connection', (socket) =>{
   console.log('connected');
+  socket.on('message', (event) =>{
+    console.log(event);
+    socket.broadcast.emit('message', event);
+  });
 });
 
-io.on('disconnect', event =>{
+io.on('disconnect', (event) =>{
   console.log('disconnected');
 });
 
