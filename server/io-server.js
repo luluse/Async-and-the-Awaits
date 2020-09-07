@@ -27,5 +27,7 @@ io.on('connection', socket => {
     io.emit('received', messageFromClient);
   });
 
-  socket.on('disconnect', () => console.log('Client disconnected.'));
+  // socket.on('disconnect', () => console.log('Client disconnected.'));
 });
+
+io.on('disconnect', () => console.log('Client disconnected.'));
