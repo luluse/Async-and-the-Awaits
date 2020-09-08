@@ -38,10 +38,11 @@ async function getInput() {
   getInput();
 }
 
+
 async function getName() {
   console.clear();
   let input = await inquirer.prompt([
-    { name: 'name', message: 'Please enter your name.' },
+    { name: 'name', message: 'Please provide username and password.' },
   ]);
   username = input.name;
 }
