@@ -36,4 +36,17 @@ users.methods.comparePassword = async function (password) {
   return passwordMatch ? this : null;
 };
 
+users.methods.generateToken = async function () {
+  const payload = {
+    id: this._id,
+    role: this.role,
+  };
+  return jwt.sign(payload, process.env.JWT_SECRET);
+};
+
+users.statics.authenticateToken = async function (token) {
+  let tokenObject = jwt.verify(token, process.env.JWT_SECRET);
+  return await this.findById(tokenObject.id);
+};
+
 module.exports = mongoose.model('users', users);

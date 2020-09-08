@@ -5,10 +5,10 @@ require('dotenv').config();
 const inquirer = require('inquirer');
 
 const io = require('socket.io-client');
-// const serverChannel = io.connect('http://localhost:3001/server');
-const serverChannel = io.connect(
-  'https://command-love-interface.herokuapp.com'
-);
+const serverChannel = io.connect('http://localhost:3001'); // Do we need to add /server on URI?
+// const serverChannel = io.connect(
+//   'https://command-love-interface.herokuapp.com'
+// );
 
 serverChannel.emit('join', 'I just joined!');
 
@@ -18,9 +18,9 @@ serverChannel.on('received', messageBackFromServer => {
   console.log('Message Receipt from SERVER: ', messageBackFromServer);
 });
 
-serverChannel.on('disconnect', () => {
-  serverChannel.emit('disconnect');
-});
+// serverChannel.on('disconnect', () => {
+//   serverChannel.emit('disconnect');
+// });
 
 let username = '';
 
