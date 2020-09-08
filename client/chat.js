@@ -10,6 +10,8 @@ const serverChannel = io.connect(
   'https://command-love-interface.herokuapp.com'
 );
 
+
+
 serverChannel.emit('join', 'I just joined!');
 
 // Server should send the message back to the sender as confirmation (for testing purposes only until we get it working)
@@ -38,10 +40,11 @@ async function getInput() {
   getInput();
 }
 
+
 async function getName() {
   console.clear();
   let input = await inquirer.prompt([
-    { name: 'name', message: 'Please enter your name.' },
+    { name: 'name', message: 'Please provide username and password.' },
   ]);
   let nameCheck = await inquirer.prompt([
     { name: 'name', message: 'What do you want to' },
