@@ -22,7 +22,7 @@ module.exports = async (req, res, next) => {
 
   try {
     const validUser = await User.authenticateBasic(user, pass);
-    // req.token = validUser.generateToken();
+    req.token = validUser.generateToken();
     req.user = user;
     next();
   } catch (err) {
