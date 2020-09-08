@@ -22,6 +22,26 @@ io.on('connection', socket => {
     socket.join(room);
   });
 
+  // socket.on('delivered', (payload) => {
+  //   logIt('deliverd', payload);
+  //   caps.to(process.env.STORE_NAME).emit('delivered', payload);
+  //   console.log('DELIVERED', payload);
+  // });
+
+  socket.on('signin', username => { // "user" is from chat client username input
+    let firstUser = {
+      username: 'lulu',
+    };
+    console.log(`username is ${username}`);
+    if(username === firstUser.username){
+      io.emit('validated', true);
+    } else {
+      io.emit('validated', false);
+    }
+
+    // user === firstUser.username ? true : false
+  });
+
   socket.on('message', messageFromClient => {
     console.log('Received: ', messageFromClient);
     io.emit('received', messageFromClient);
