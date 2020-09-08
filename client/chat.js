@@ -43,6 +43,10 @@ async function getName() {
   let input = await inquirer.prompt([
     { name: 'name', message: 'Please enter your name.' },
   ]);
+  let nameCheck = await inquirer.prompt([
+    { name: 'name', message: 'What do you want to' },
+  ]);
+
   username = input.name;
 }
 
