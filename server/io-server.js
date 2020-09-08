@@ -17,10 +17,8 @@ const io = socketIO(server);
 io.on('connection', socket => {
   console.log('Client connected on: ', socket.id);
 
-  socket.on('join', room => {
-    console.log('Joined room: ', room);
-    socket.join(room);
-  });
+  
+  
 
   // socket.on('delivered', (payload) => {
   //   logIt('deliverd', payload);
@@ -31,6 +29,7 @@ io.on('connection', socket => {
   socket.on('signin', username => { // "user" is from chat client username input
     let firstUser = {
       username: 'lulu',
+      password: 'lulu',
     };
     console.log(`username is ${username}`);
     if(username === firstUser.username){
