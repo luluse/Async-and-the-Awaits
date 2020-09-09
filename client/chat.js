@@ -60,9 +60,9 @@ async function login() {
   serverChannel.on('validated', (answer) => {
     if (answer === true) {
       console.log(`Welcome to the chat, ${input.username}!`);
-      username = input.username;
-      getInput(input.username);
-      chatWithOneUser(input.username);
+      // username = input.username;
+      // getInput(input.username);
+      chatWithOneUser('luluSe', 'honky');
     } else {
       console.log('Invalid login. Please try again.');
       loginOrCreate();
@@ -71,6 +71,7 @@ async function login() {
 }
 function chatWithOneUser(user, targetUser){
   console.log('invite to chat', user);
+
   // we can assume that we have a username of someone we want to chat with.
   //setup a room for the two to chat in
   //send copies of each message to the database
@@ -90,6 +91,7 @@ function chatWithOneUser(user, targetUser){
   };
   serverChannel.emit('chatRequest', request);
   serverChannel.on('startChat', room =>{
+    getInput('luluSe', 'honky');
     console.log('you can start in room', room);
   });
 

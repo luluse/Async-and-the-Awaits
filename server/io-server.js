@@ -53,7 +53,8 @@ io.on('connection', (socket) => {
     let room1 = request.from+'_'+request.to;
     console.log('chatRequest');
     socket.join(room1);
-    socket.emit('startChat', room1);
+    console.log('after socket.join()');
+    io.to('luluSe_honky').emit('startChat', room1);
   });
   socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
