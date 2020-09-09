@@ -6,10 +6,10 @@ const inquirer = require('inquirer');
 
 const io = require('socket.io-client');
 
-const serverChannel = io.connect(
-  'https://command-love-interface.herokuapp.com'
-);
-// const serverChannel = io.connect('http://localhost:3001');
+// const serverChannel = io.connect(
+//   'https://command-love-interface.herokuapp.com'
+// );
+const serverChannel = io.connect('http://localhost:3001');
 
 serverChannel.emit('join', 'I just joined!');
 
@@ -59,9 +59,9 @@ async function login() {
   serverChannel.emit('signin', signupObject);
   serverChannel.on('validated', (answer) => {
     if (answer === true) {
-      // console.log(`Welcome to the chat, ${input.username}!`);
-      // // username = input.username;
-      // getInput(input.username);
+      console.log(`Welcome to the chat, ${input.username}!`);
+      username = input.username;
+      getInput(input.username);
       chatWithOneUser(input.username);
     } else {
       console.log('Invalid login. Please try again.');
@@ -84,7 +84,17 @@ function chatWithOneUser(user, targetUser){
   //switchboard responds with "room ready" and roomlocation payload lulu_beasley
 
 
+  let request = {
+    from: user,
+    to:targetUser,
+  };
+  serverChannel.emit('chatRequest', request);
+  serverChannel.on('startChat', room =>{
+    console.log('you can start in room', room);
+  });
+
 }
+chatWithOneUser('luluSe', 'honky');
 
 async function createUser() {
   let newUsername = await inquirer.prompt([
@@ -182,4 +192,4 @@ async function loginOrCreate() {
 //   username = input.name;
 // }
 
-loginOrCreate();
+// loginOrCreate();
