@@ -6,6 +6,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const mongoose = require('mongoose');
 const User = require('../basicSchema');
+const Message = require('../messageSchema.js');
 
 const mongooseOptions = {
   useNewUrlParser: true,
@@ -19,8 +20,8 @@ console.log(PORT);
 // weird alternate mongo connection method
 // let MongoClient = require('mongodb').MongoClient;
 // let url = 'mongodb://localhost:27017/';
-const MONGODB_URI = process.env.MONGODB_URI;
-mongoose.connect(MONGODB_URI, mongooseOptions);
+// const MONGODB_URI = process.env.MONGODB_URI;
+mongoose.connect('mongodb+srv://alexwhan:f05dBGIPZtXJMshV@chats.4bzzl.mongodb.net/chat?retryWrites=true&w=majority', mongooseOptions);
 
 const server = express().listen(PORT, () =>
   console.log(`Listening on ${PORT}`)
@@ -28,6 +29,13 @@ const server = express().listen(PORT, () =>
 
 const io = socketIO(server);
 // const ioServer = io.of('/server');
+
+const newMessage = ({ message: 'Hello there kind gangsters' });
+function saveMessage(data){
+  const message = Message.create(data);
+  console.log('Stored in database', message);
+}
+saveMessage(newMessage);
 
 io.on('connection', (socket) => {
   console.log('Client connected on: ', socket.id);
