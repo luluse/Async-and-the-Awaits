@@ -11,9 +11,8 @@ const serverChannel = io.connect('http://localhost:3001');
 serverChannel.emit('join', 'I just joined!');
 
 // Server should send the message back to the sender as confirmation (for testing purposes only until we get it working)
-
 serverChannel.on('received', (messageBackFromServer) => {
-  // console.log('Message Receipt from SERVER: ', messageBackFromServer);
+  console.log('Message Receipt from SERVER: ', messageBackFromServer);
 });
 
 serverChannel.on('disconnect', () => {
@@ -23,8 +22,6 @@ serverChannel.on('disconnect', () => {
 let username = '';
 
 function sendMessage(text) {
-  console.log('sending: ', text);
-
   let message = `[${username}]: ${text}`;
   serverChannel.emit('message', message);
 }
@@ -52,6 +49,7 @@ async function createUser() {
   let newPass = await inquirer.prompt([
     {
       type: 'password',
+      mask: ['default'],
       name: 'password',
       message: 'Please choose a password:',
     },
@@ -91,6 +89,10 @@ async function createUser() {
   serverChannel.emit('signup', newUser);
 
   console.log('NEW USER: ', newUser);
+  console.log(
+    `Welcome to the Command-Love-Interface, ${newUser.username}! Please log in to get started.`
+  );
+  login();
 }
 
 async function loginOrCreate() {
