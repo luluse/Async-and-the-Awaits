@@ -59,14 +59,31 @@ async function login() {
   serverChannel.emit('signin', signupObject);
   serverChannel.on('validated', (answer) => {
     if (answer === true) {
-      console.log(`Welcome to the chat, ${input.username}!`);
-      // username = input.username;
-      getInput(input.username);
+      // console.log(`Welcome to the chat, ${input.username}!`);
+      // // username = input.username;
+      // getInput(input.username);
+      chatWithOneUser(input.username);
     } else {
       console.log('Invalid login. Please try again.');
       loginOrCreate();
     }
   });
+}
+function chatWithOneUser(user, targetUser){
+  console.log('invite to chat', user);
+  // we can assume that we have a username of someone we want to chat with.
+  //setup a room for the two to chat in
+  //send copies of each message to the database
+  //I want to chat with one person
+  //does other username exist?
+  //does chat with that username exist? if so, load that chat
+  //I want to chat with targetUser and receive confirmation that you have a joined a room with just the two of you.
+  //the switchboard has connected
+
+  //event payload {to: lulu, from: beasley}
+  //switchboard responds with "room ready" and roomlocation payload lulu_beasley
+
+
 }
 
 async function createUser() {
