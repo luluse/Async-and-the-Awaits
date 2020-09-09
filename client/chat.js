@@ -45,6 +45,42 @@ async function login(){
     }
   });
 }
+async function createUser(){
+  let newUsername = await inquirer.prompt([
+    { name: 'username', message: 'Choose a username'},
+  ]);
+
+  let newPass = await inquirer.prompt([
+    { name: 'password', message: 'Please choose a password'},
+  ]);
+  
+  let newEmail = await inquirer.prompt([
+    { name: 'email', message: 'Enter your email'},
+  ]);
+
+  let newFav = await inquirer.prompt([
+    { name: 'favLanguage', message: 'What is your favorite development language?'},
+  ]);
+
+  let newDesc = await inquirer.prompt([
+    { name: 'description', message: 'Tell us about yourself in one sentence'},
+  ]);
+
+  let newOs = await inquirer.prompt([
+    { name: 'os', message: 'What operating system do you use?'},
+  ]);
+  
+  const newUser = {
+    username: newUsername.username,
+    password: newPass.password,
+    email: newEmail.email,
+    favLanguage: newFav.favLanguage,
+    description: newDesc.description,
+    os: newOs.os,
+  };
+
+  console.log('NEW USER: ', newUser);
+}
 
 async function loginOrCreate(){
   let input = await inquirer.prompt([
@@ -54,7 +90,7 @@ async function loginOrCreate(){
   // if yes, please enter username / password
   if(regex.test(input.isMember)) {
     login();
-  } else if
+  } else createUser();
   // if no, new prompt for signup 
 
 
