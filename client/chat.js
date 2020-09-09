@@ -34,7 +34,8 @@ async function getInput(username) {
 
 function sendMessage(username, text) {
   let message = `[${username}]: ${text}`;
-  serverChannel.emit('message', message);
+  // serverChannel.emit('message', message);
+  serverChannel.emit('chatToLulu', message);
 }
 
 async function login() {
@@ -91,7 +92,7 @@ function chatWithOneUser(user, targetUser){
   };
   serverChannel.emit('chatRequest', request);
   serverChannel.on('startChat', room =>{
-    getInput('luluSe', 'honky');
+    getInput('luluSe');
     console.log('you can start in room', room);
   });
 

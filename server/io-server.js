@@ -30,7 +30,7 @@ const io = socketIO(server);
 // const ioServer = io.of('/server');
 
 io.on('connection', (socket) => {
-  console.log('i am into connection');
+  console.log('i am in connection');
   console.log('Client connected on: ', socket.id);
 
   socket.on('signup', async (userObj) => {
@@ -55,6 +55,9 @@ io.on('connection', (socket) => {
     socket.join(room1);
     console.log('after socket.join()');
     io.to('luluSe_honky').emit('startChat', room1);
+  });
+  socket.on('chatToLulu', message =>{
+    io.to('luluSe_honky').emit('startChat', message);
   });
   socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
