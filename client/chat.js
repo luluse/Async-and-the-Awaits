@@ -46,15 +46,15 @@ async function login() {
 }
 async function createUser() {
   let newUsername = await inquirer.prompt([
-    { name: 'username', message: 'Choose a username' },
+    { name: 'username', message: 'Choose a username:' },
   ]);
 
   let newPass = await inquirer.prompt([
-    { name: 'password', message: 'Please choose a password' },
+    { name: 'password', message: 'Please choose a password:' },
   ]);
 
   let newEmail = await inquirer.prompt([
-    { name: 'email', message: 'Enter your email' },
+    { name: 'email', message: 'Enter your email:' },
   ]);
 
   let newFav = await inquirer.prompt([
@@ -67,7 +67,7 @@ async function createUser() {
   let newDesc = await inquirer.prompt([
     {
       name: 'description',
-      message: 'Tell us about yourself in one sentence',
+      message: 'Tell us about yourself in one sentence:',
     },
   ]);
 
@@ -90,9 +90,19 @@ async function createUser() {
 }
 
 async function loginOrCreate() {
+  // let input = await inquirer.prompt([
+  //   { name: 'isMember', message: 'Are you a member? (y/n)' },
+  // ]);
+
   let input = await inquirer.prompt([
-    { name: 'isMember', message: 'Are you a member? (y/n)' },
+    {
+      type: 'list',
+      name: 'isMember',
+      message: 'What would you like to do?',
+      choices: ['Log In', 'Sign Up'],
+    },
   ]);
+
   let regex = /y|yes/i;
   // if yes, please enter username / password
   if (regex.test(input.isMember)) {
@@ -137,7 +147,7 @@ async function getInput() {
 async function getName() {
   // console.clear();
   let input = await inquirer.prompt([
-    { name: 'name', message: 'Please provide username' },
+    { name: 'name', message: 'Please enter your username:' },
   ]);
   // let nameCheck = await inquirer.prompt([
   //   { name: 'name', message: 'What do you want to' },
