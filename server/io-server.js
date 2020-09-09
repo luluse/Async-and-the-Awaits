@@ -2,27 +2,11 @@
 'use strict';
 
 require('dotenv').config();
-const express = require('express');
-const socketIO = require('socket.io');
-// const mongoose = require('mongoose');
+const http = require('http').createServer();
+const io = require('socket.io')(http);
 const User = require('../basicSchema');
 
-// const mongooseOptions = {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   useCreateIndex: true,
-// };
-
-// const MONGODB_URI = process.env.MONGODB_URI;
-// mongoose.connect(MONGODB_URI, mongooseOptions);
-
 const PORT = process.env.PORT || 3001;
-
-const server = express().listen(PORT, () =>
-  console.log(`Listening on ${PORT}`)
-);
-
-const io = socketIO(server);
 // const ioServer = io.of('/server');
 
 io.on('connection', (socket) => {
@@ -55,11 +39,11 @@ io.on('connection', (socket) => {
 
 io.on('disconnect', () => console.log('Client disconnected.'));
 
-// module.exports = {
-//   server: io,
-//   start: (PORT) => {
-//     io.listen(PORT, () => {
-//       console.log(`Listening on ${PORT}`);
-//     });
-//   },
-// };
+module.exports = {
+  server: http,
+  start: (PORT) => {
+    http.listen(PORT, () => {
+      console.log(`Listening on ${PORT}`);
+    });
+  },
+};

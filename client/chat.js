@@ -6,10 +6,10 @@ const inquirer = require('inquirer');
 
 const io = require('socket.io-client');
 
-const serverChannel = io.connect(
-  'https://command-love-interface.herokuapp.com'
-);
-// const serverChannel = io.connect('http://localhost:3001');
+// const serverChannel = io.connect(
+//   'https://command-love-interface.herokuapp.com'
+// );
+const serverChannel = io.connect('http://localhost:3001');
 
 serverChannel.emit('join', 'I just joined!');
 
@@ -23,7 +23,6 @@ serverChannel.on('disconnect', () => {
 });
 
 async function getInput(username) {
-  // inquirer grabs input from the CLI
   let input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
   sendMessage(username, input.text);
   getInput(username);
@@ -54,6 +53,7 @@ async function login() {
   };
 
   serverChannel.emit('signin', signupObject);
+
   serverChannel.on('validated', (answer) => {
     if (answer === true) {
       console.log(`Welcome to the chat, ${input.username}!`);
@@ -127,7 +127,6 @@ async function loginOrCreate() {
       message:
         'Welcome to the Command-Love-Interface! What would you like to do?',
       choices: ['Log In', 'Sign Up'],
-      // console.log(input.isMember) will log out actual "choice" as { isMember: 'Log In' }
     },
   ]);
 

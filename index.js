@@ -13,4 +13,4 @@ const MONGODB_URI = process.env.MONGODB_URI;
 mongoose.connect(MONGODB_URI, mongooseOptions);
 
 const PORT = process.env.PORT || 3001;
-// server.start(PORT);
+server.start(PORT);
