@@ -30,6 +30,7 @@ const io = socketIO(server);
 // const ioServer = io.of('/server');
 
 io.on('connection', (socket) => {
+  console.log('i am into connection');
   console.log('Client connected on: ', socket.id);
 
   socket.on('signup', async (userObj) => {
@@ -48,11 +49,17 @@ io.on('connection', (socket) => {
       io.emit('validated', false);
     } else io.emit('validated', true);
   });
-
+  socket.on('chatRequest', request =>{
+    let room1 = request.from+'_'+request.to;
+    console.log('chatRequest');
+    socket.join(room1);
+    socket.emit('startChat', room1);
+  });
   socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
     io.emit('received', messageFromClient);
   });
+
 
   // socket.on('disconnect', () => console.log('Client disconnected.'));
 });
