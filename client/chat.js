@@ -79,8 +79,13 @@ async function createUser(){
     os: newOs.os,
   };
 
+  serverChannel.emit('signup', newUser);
+  
+
   console.log('NEW USER: ', newUser);
 }
+
+
 
 async function loginOrCreate(){
   let input = await inquirer.prompt([
@@ -92,16 +97,6 @@ async function loginOrCreate(){
     login();
   } else createUser();
   // if no, new prompt for signup 
-
-
-  // if(input.username === firstUser.username){
-  //   username = input.username;
-  //   console.log(`Welcome to the chat, ${username}!`);
-  //   getInput();
-  // } else {
-  //   console.log('wrong!');
-  //   loginOrCreate();
-  // }
   
 }
 
