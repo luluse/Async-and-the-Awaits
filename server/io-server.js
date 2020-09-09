@@ -5,13 +5,14 @@ const express = require('express');
 const socketIO = require('socket.io');
 const mongoose = require('mongoose');
 const User = require('../basicSchema');
-console.log(process.env.PORT, 'this is the port');
+// console.log(process.env.PORT, 'this is the port');
 const mongooseOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex:true
 };
 const PORT = process.env.PORT || 3001;
+console.log(PORT);
 // const INDEX = '../client/chat.js';
 
 // weird alternate mongo connection method
@@ -50,7 +51,7 @@ io.on('connection', socket => {
     
     }
 
-    user === firstUser.username ? true : false
+    // user === firstUser.username ? true : false
     // MongoClient.connect(url, function(err, db) {
     //   let dbo = db.db('userz');
     //   let myObj = { username: 'Beasley', password: 'beasley' };
