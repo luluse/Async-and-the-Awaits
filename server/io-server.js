@@ -6,7 +6,6 @@ const http = require('http').createServer();
 const io = require('socket.io')(http);
 const User = require('../basicSchema');
 
-const PORT = process.env.PORT || 3001;
 // const ioServer = io.of('/server');
 
 io.on('connection', (socket) => {
@@ -34,10 +33,8 @@ io.on('connection', (socket) => {
     io.emit('received', messageFromClient);
   });
 
-  // socket.on('disconnect', () => console.log('Client disconnected.'));
+  socket.on('disconnect', () => console.log('Client disconnected.'));
 });
-
-io.on('disconnect', () => console.log('Client disconnected.'));
 
 module.exports = {
   server: http,
