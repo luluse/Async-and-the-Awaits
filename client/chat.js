@@ -15,15 +15,12 @@ serverChannel.emit('join', 'I just joined!');
 
 // Server should send the message back to the sender as confirmation (for testing purposes only until we get it working)
 serverChannel.on('received', (messageBackFromServer) => {
-  // console.log('Message Receipt from SERVER: ', messageBackFromServer);
   console.log(messageBackFromServer);
 });
 
 serverChannel.on('disconnect', () => {
   serverChannel.emit('disconnect');
 });
-
-// let username = '';
 
 async function getInput(username) {
   // inquirer grabs input from the CLI
@@ -60,7 +57,6 @@ async function login() {
   serverChannel.on('validated', (answer) => {
     if (answer === true) {
       console.log(`Welcome to the chat, ${input.username}!`);
-      // username = input.username;
       getInput(input.username);
     } else {
       console.log('Invalid login. Please try again.');
@@ -124,10 +120,6 @@ async function createUser() {
 }
 
 async function loginOrCreate() {
-  // let input = await inquirer.prompt([
-  //   { name: 'isMember', message: 'Are you a member? (y/n)' },
-  // ]);
-
   let input = await inquirer.prompt([
     {
       type: 'rawlist',
@@ -144,25 +136,5 @@ async function loginOrCreate() {
   } else createUser();
   // if no, new prompt for signup
 }
-
-// async function getInputLogin() {
-//   // inquirer grabs input from the CLI
-//   let input = await inquirer.prompt([
-//     { name: 'username', message: 'enter your username' },
-//   ]);
-//   sendMessage(input.username);
-// }
-
-// async function getName() {
-//   // console.clear();
-//   let input = await inquirer.prompt([
-//     { name: 'name', message: 'Please enter your username:' },
-//   ]);
-//   // let nameCheck = await inquirer.prompt([
-//   //   { name: 'name', message: 'What do you want to' },
-//   // ]);
-
-//   username = input.name;
-// }
 
 loginOrCreate();
