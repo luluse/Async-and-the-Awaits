@@ -47,20 +47,6 @@ io.on('connection', (socket) => {
       console.log('inside of valid user');
       io.emit('validated', false);
     } else io.emit('validated', true);
-
-    // const user = await User.findOne(loginObj.username);
-    // const validUser = await User.authenticateBasic(
-    //   loginObj.username,
-    //   loginObj.password
-    // );
-
-    // console.log(validUser);
-
-    // if (user) {
-    //   io.emit('validated', true);
-    // } else {
-    //   io.emit('validated', false);
-    // }
   });
 
   socket.on('message', (messageFromClient) => {
