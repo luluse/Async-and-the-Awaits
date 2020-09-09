@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 'use strict';
 
 require('dotenv').config();
@@ -9,7 +10,7 @@ const User = require('../basicSchema');
 const mongooseOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex:true,
+  useCreateIndex: true,
 };
 
 const PORT = process.env.PORT || 3001;
@@ -18,34 +19,35 @@ console.log(PORT);
 // weird alternate mongo connection method
 // let MongoClient = require('mongodb').MongoClient;
 // let url = 'mongodb://localhost:27017/';
+const MONGODB_URI = process.env.MONGODB_URI;
+mongoose.connect(MONGODB_URI, mongooseOptions);
 
-mongoose.connect('mongodb://localhost:27017/userz', mongooseOptions);
-
-const server = express()
-  .listen(PORT, () => console.log(`Listening on ${PORT}`));
+const server = express().listen(PORT, () =>
+  console.log(`Listening on ${PORT}`)
+);
 
 const io = socketIO(server);
 // const ioServer = io.of('/server');
 
-io.on('connection', socket => {
+io.on('connection', (socket) => {
   console.log('Client connected on: ', socket.id);
 
-
-  socket.on('signup',  async userObj =>{
+  socket.on('signup', async (userObj) => {
     const user = await User.create(userObj);
     console.log(user, ' Has Been Saved!');
   });
-  
-  socket.on('signin', async username => { // "user" is from chat client username input
+
+  socket.on('signin', async (username) => {
+    // "user" is from chat client username input
     let firstUser = {
       username: 'lulu',
       password: 'lulu',
     };
     console.log(`username is ${username}`);
-    if(username === firstUser.username){
+    if (username === firstUser.username) {
       io.emit('validated', true);
     } else {
-      io.emit('validated', false);    
+      io.emit('validated', false);
     }
 
     // user === firstUser.username ? true : false
@@ -60,7 +62,7 @@ io.on('connection', socket => {
     // })
   });
 
-  socket.on('message', messageFromClient => {
+  socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
     io.emit('received', messageFromClient);
   });

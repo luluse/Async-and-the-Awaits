@@ -6,14 +6,13 @@ const inquirer = require('inquirer');
 
 const io = require('socket.io-client');
 
-
 const serverChannel = io.connect('http://localhost:3001');
 
 serverChannel.emit('join', 'I just joined!');
 
 // Server should send the message back to the sender as confirmation (for testing purposes only until we get it working)
 
-serverChannel.on('received', messageBackFromServer => {
+serverChannel.on('received', (messageBackFromServer) => {
   // console.log('Message Receipt from SERVER: ', messageBackFromServer);
 });
 
@@ -30,13 +29,13 @@ function sendMessage(text) {
   serverChannel.emit('message', message);
 }
 
-async function login(){
+async function login() {
   let input = await inquirer.prompt([
-    { name: 'username', message: 'Please enter username'},
+    { name: 'username', message: 'Please enter username' },
   ]);
   serverChannel.emit('signin', input.username);
-  serverChannel.on('validated', answer => {
-    if(answer === true){
+  serverChannel.on('validated', (answer) => {
+    if (answer === true) {
       console.log(`Welcome to the chat, ${username}!`);
       getInput();
     } else {
@@ -45,31 +44,37 @@ async function login(){
     }
   });
 }
-async function createUser(){
+async function createUser() {
   let newUsername = await inquirer.prompt([
-    { name: 'username', message: 'Choose a username'},
+    { name: 'username', message: 'Choose a username' },
   ]);
 
   let newPass = await inquirer.prompt([
-    { name: 'password', message: 'Please choose a password'},
+    { name: 'password', message: 'Please choose a password' },
   ]);
-  
+
   let newEmail = await inquirer.prompt([
-    { name: 'email', message: 'Enter your email'},
+    { name: 'email', message: 'Enter your email' },
   ]);
 
   let newFav = await inquirer.prompt([
-    { name: 'favLanguage', message: 'What is your favorite development language?'},
+    {
+      name: 'favLanguage',
+      message: 'What is your favorite development language?',
+    },
   ]);
 
   let newDesc = await inquirer.prompt([
-    { name: 'description', message: 'Tell us about yourself in one sentence'},
+    {
+      name: 'description',
+      message: 'Tell us about yourself in one sentence',
+    },
   ]);
 
   let newOs = await inquirer.prompt([
-    { name: 'os', message: 'What operating system do you use?'},
+    { name: 'os', message: 'What operating system do you use?' },
   ]);
-  
+
   const newUser = {
     username: newUsername.username,
     password: newPass.password,
@@ -80,24 +85,20 @@ async function createUser(){
   };
 
   serverChannel.emit('signup', newUser);
-  
 
   console.log('NEW USER: ', newUser);
 }
 
-
-
-async function loginOrCreate(){
+async function loginOrCreate() {
   let input = await inquirer.prompt([
     { name: 'isMember', message: 'Are you a member? (y/n)' },
   ]);
   let regex = /y|yes/i;
   // if yes, please enter username / password
-  if(regex.test(input.isMember)) {
+  if (regex.test(input.isMember)) {
     login();
   } else createUser();
-  // if no, new prompt for signup 
-  
+  // if no, new prompt for signup
 }
 
 // async function loginOrCreate(){
@@ -118,10 +119,11 @@ async function loginOrCreate(){
 //   }
 // }
 
-
 async function getInputLogin() {
   // inquirer grabs input from the CLI
-  let input = await inquirer.prompt([{name: 'username', message: 'enter your username' }]);
+  let input = await inquirer.prompt([
+    { name: 'username', message: 'enter your username' },
+  ]);
   sendMessage(input.username);
 }
 
