@@ -31,7 +31,7 @@ function sendMessage(text) {
 
 async function login() {
   let input = await inquirer.prompt([
-    { name: 'username', message: 'Please enter username' },
+    { name: 'username', message: 'Please enter your username:' },
   ]);
   serverChannel.emit('signin', input.username);
   serverChannel.on('validated', (answer) => {
@@ -39,7 +39,7 @@ async function login() {
       console.log(`Welcome to the chat, ${username}!`);
       getInput();
     } else {
-      console.log('Invalid username. Please try again.');
+      console.log('Invalid login. Please try again.');
       loginOrCreate();
     }
   });
@@ -50,7 +50,11 @@ async function createUser() {
   ]);
 
   let newPass = await inquirer.prompt([
-    { name: 'password', message: 'Please choose a password:' },
+    {
+      type: 'password',
+      name: 'password',
+      message: 'Please choose a password:',
+    },
   ]);
 
   let newEmail = await inquirer.prompt([
@@ -96,38 +100,20 @@ async function loginOrCreate() {
 
   let input = await inquirer.prompt([
     {
-      type: 'list',
-      name: 'isMember',
-      message: 'What would you like to do?',
+      type: 'rawlist',
+      name: 'loginChoice',
+      message:
+        'Welcome to the Command-Love-Interface! What would you like to do?',
       choices: ['Log In', 'Sign Up'],
+      // console.log(input.isMember) will log out actual "choice" as { isMember: 'Log In' }
     },
   ]);
 
-  let regex = /y|yes/i;
-  // if yes, please enter username / password
-  if (regex.test(input.isMember)) {
+  if (input.loginChoice === 'Log In') {
     login();
   } else createUser();
   // if no, new prompt for signup
 }
-
-// async function loginOrCreate(){
-//   // console.log('Please enter username');
-//   // console.log('Please enter password');
-//   let input = await inquirer.prompt([
-//     { name: 'username', message: 'Please enter username *********' },
-//   ]);
-//   // sendMessage(input.text);
-//   // getInputLogin();
-//   if(input.username === firstUser.username){
-//     username = input.username;
-//     console.log(`Welcome to the chat, ${username}!`);
-//     getInput();
-//   } else {
-//     console.log('wrong!');
-//     loginOrCreate();
-//   }
-// }
 
 async function getInputLogin() {
   // inquirer grabs input from the CLI
@@ -144,18 +130,16 @@ async function getInput() {
   getInput();
 }
 
-async function getName() {
-  // console.clear();
-  let input = await inquirer.prompt([
-    { name: 'name', message: 'Please enter your username:' },
-  ]);
-  // let nameCheck = await inquirer.prompt([
-  //   { name: 'name', message: 'What do you want to' },
-  // ]);
+// async function getName() {
+//   // console.clear();
+//   let input = await inquirer.prompt([
+//     { name: 'name', message: 'Please enter your username:' },
+//   ]);
+//   // let nameCheck = await inquirer.prompt([
+//   //   { name: 'name', message: 'What do you want to' },
+//   // ]);
 
-  username = input.name;
-}
+//   username = input.name;
+// }
 
 loginOrCreate();
-// getName();
-// getInput();
