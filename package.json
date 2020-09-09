@@ -29,5 +29,9 @@
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0"
   },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 2
+  },
   "homepage": "https://github.com/Async-and-the-Awaits/Async-and-the-Awaits#readme"
 }
