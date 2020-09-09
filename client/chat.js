@@ -20,7 +20,7 @@ serverChannel.on('disconnect', () => {
   serverChannel.emit('disconnect');
 });
 
-let username = '';
+// let username = '';
 
 async function getInput(username) {
   // inquirer grabs input from the CLI
@@ -38,7 +38,22 @@ async function login() {
   let input = await inquirer.prompt([
     { name: 'username', message: 'Please enter your username:' },
   ]);
-  serverChannel.emit('signin', input.username);
+
+  let pass = await inquirer.prompt([
+    {
+      type: 'password',
+      mask: ['default'],
+      name: 'password',
+      message: 'Please enter your password:',
+    },
+  ]);
+
+  const signupObject = {
+    username: input.username,
+    password: pass.password,
+  };
+
+  serverChannel.emit('signin', signupObject);
   serverChannel.on('validated', (answer) => {
     if (answer === true) {
       console.log(`Welcome to the chat, ${input.username}!`);
