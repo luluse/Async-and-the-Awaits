@@ -29,12 +29,29 @@ function sendMessage(text) {
   let message = `[${username}]: ${text}`;
   serverChannel.emit('message', message);
 }
+serverChannel.on('invalidated', userObj => {
+  console.log("I'm sorry, we were unable to validate", userObj, 'with the password you entered.');
+  setTimeout(()=>{
+    console.log('Please Try again');
+    setTimeout(()=>{
+      login();
+    }, 1500);
+  }, 1000);
+  
+})
 
 async function login(){
   let input = await inquirer.prompt([
     { name: 'username', message: 'Please enter username'},
   ]);
-  serverChannel.emit('signin', input.username);
+  let pass = await inquirer.prompt([
+    { name: 'password', message: 'Please enter your Password'}
+  ]);
+  let signupObject = {
+    username: input.username,
+    password: pass.password,
+  };
+  serverChannel.emit('signin', signupObject);
   serverChannel.on('validated', answer => {
     if(answer === true){
       console.log(`Welcome to the chat, ${username}!`);
@@ -85,6 +102,13 @@ async function createUser(){
   console.log('NEW USER: ', newUser);
 }
 
+serverChannel.on('signupSuccess', username =>{
+  console.clear();
+  console.log(username, 'Thank you for signing up!');
+  setTimeout(()=>{
+    login();
+  }, 1500)
+});
 
 
 async function loginOrCreate(){

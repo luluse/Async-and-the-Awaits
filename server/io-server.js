@@ -32,21 +32,29 @@ io.on('connection', socket => {
 
 
   socket.on('signup',  async userObj =>{
-    const user = await User.create(userObj);
-    console.log(user, ' Has Been Saved!');
+    try{
+      const user = await User.create(userObj);
+      io.emit('signupSuccess', user.username);
+    } catch(error){
+      throw new Error('We were unable to sign you up! Please try again.', error)
+    }
+    
   });
   
-  socket.on('signin', async username => { // "user" is from chat client username input
-    let firstUser = {
-      username: 'lulu',
-      password: 'lulu',
-    };
-    console.log(`username is ${username}`);
-    if(username === firstUser.username){
-      io.emit('validated', true);
-    } else {
-      io.emit('validated', false);    
-    }
+  socket.on('signin', async userObj => { // "user" is from chat client username input 
+  const validUser = await User.authenticateBasic(userObj.username, userObj.password);
+  console.log('result from authenticate basic', validUser);
+  if(!validUser){
+    console.log('inside of valid user')
+    io.emit('invalidated', userObj);
+  }
+  else io.emit('validated', userObj.username);
+  
+    // if(username === firstUser.username){
+    //   io.emit('validated', true);
+    // } else {
+    //   io.emit('validated', false);    
+    // }
 
     // user === firstUser.username ? true : false
     // MongoClient.connect(url, function(err, db) {
