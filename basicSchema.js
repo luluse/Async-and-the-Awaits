@@ -2,16 +2,16 @@
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-
-const users = new mongoose.schema({
+// const jwt = require('jsonwebtoken');
+let usersObject = {
   username: {type: String, required: true, unique: true },
-  password: { type: String, required: true, unique: true },
-  email:{type: String, required: true, unique: true},
+  password: { type: String, unique: true },
+  email:{type: String, unique: true},
   favLanguage:{type: String},
   description: {type: String},
   os: { type: String },
-});
+};
+const users = new mongoose.Schema(usersObject);
 
 users.pre('save', async function () {
   if(this.isModified('password')) {

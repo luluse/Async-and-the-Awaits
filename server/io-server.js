@@ -3,9 +3,22 @@
 require('dotenv').config();
 const express = require('express');
 const socketIO = require('socket.io');
-
+const mongoose = require('mongoose');
+const User = require('../basicSchema');
+console.log(process.env.PORT, 'this is the port');
+const mongooseOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex:true
+};
 const PORT = process.env.PORT || 3001;
 // const INDEX = '../client/chat.js';
+
+// weird alternate mongo connection method
+// let MongoClient = require('mongodb').MongoClient;
+// let url = 'mongodb://localhost:27017/';
+
+mongoose.connect('mongodb://localhost:27017/userz', mongooseOptions);
 
 const server = express()
   // .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
@@ -17,16 +30,12 @@ const io = socketIO(server);
 io.on('connection', socket => {
   console.log('Client connected on: ', socket.id);
 
-  
-  
 
-  // socket.on('delivered', (payload) => {
-  //   logIt('deliverd', payload);
-  //   caps.to(process.env.STORE_NAME).emit('delivered', payload);
-  //   console.log('DELIVERED', payload);
-  // });
-
-  socket.on('signin', username => { // "user" is from chat client username input
+  // socket.on('signup',  async userObj =>{
+  //   const user = await User.create(userObj);
+  // })
+  
+  socket.on('signin', async username => { // "user" is from chat client username input
     let firstUser = {
       username: 'lulu',
       password: 'lulu',
@@ -35,10 +44,22 @@ io.on('connection', socket => {
     if(username === firstUser.username){
       io.emit('validated', true);
     } else {
-      io.emit('validated', false);
+
+        const user = await User.create({username});
+        io.emit('validated', false);  
+    
     }
 
-    // user === firstUser.username ? true : false
+    user === firstUser.username ? true : false
+    // MongoClient.connect(url, function(err, db) {
+    //   let dbo = db.db('userz');
+    //   let myObj = { username: 'Beasley', password: 'beasley' };
+    //   dbo.collection('myCollection').insertOne(myObj, function(err, res){
+    //     if (err) throw err;
+    //     console.log('1 document inserted');
+    //     db.close();
+    //   });
+    // })
   });
 
   socket.on('message', messageFromClient => {
