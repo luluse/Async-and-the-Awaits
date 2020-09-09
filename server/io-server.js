@@ -4,23 +4,19 @@
 require('dotenv').config();
 const express = require('express');
 const socketIO = require('socket.io');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const User = require('../basicSchema');
 
-const mongooseOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-};
+// const mongooseOptions = {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   useCreateIndex: true,
+// };
+
+// const MONGODB_URI = process.env.MONGODB_URI;
+// mongoose.connect(MONGODB_URI, mongooseOptions);
 
 const PORT = process.env.PORT || 3001;
-console.log(PORT);
-
-// weird alternate mongo connection method
-// let MongoClient = require('mongodb').MongoClient;
-// let url = 'mongodb://localhost:27017/';
-const MONGODB_URI = process.env.MONGODB_URI;
-mongoose.connect(MONGODB_URI, mongooseOptions);
 
 const server = express().listen(PORT, () =>
   console.log(`Listening on ${PORT}`)
@@ -58,3 +54,12 @@ io.on('connection', (socket) => {
 });
 
 io.on('disconnect', () => console.log('Client disconnected.'));
+
+// module.exports = {
+//   server: io,
+//   start: (PORT) => {
+//     io.listen(PORT, () => {
+//       console.log(`Listening on ${PORT}`);
+//     });
+//   },
+// };
