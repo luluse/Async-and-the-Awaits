@@ -12,7 +12,8 @@ serverChannel.emit('join', 'I just joined!');
 
 // Server should send the message back to the sender as confirmation (for testing purposes only until we get it working)
 serverChannel.on('received', (messageBackFromServer) => {
-  console.log('Message Receipt from SERVER: ', messageBackFromServer);
+  // console.log('Message Receipt from SERVER: ', messageBackFromServer);
+  console.log(messageBackFromServer);
 });
 
 serverChannel.on('disconnect', () => {
@@ -21,7 +22,14 @@ serverChannel.on('disconnect', () => {
 
 let username = '';
 
-function sendMessage(text) {
+async function getInput(username) {
+  // inquirer grabs input from the CLI
+  let input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
+  sendMessage(username, input.text);
+  getInput(username);
+}
+
+function sendMessage(username, text) {
   let message = `[${username}]: ${text}`;
   serverChannel.emit('message', message);
 }
@@ -34,13 +42,15 @@ async function login() {
   serverChannel.on('validated', (answer) => {
     if (answer === true) {
       console.log(`Welcome to the chat, ${input.username}!`);
-      getInput();
+      // username = input.username;
+      getInput(input.username);
     } else {
       console.log('Invalid login. Please try again.');
       loginOrCreate();
     }
   });
 }
+
 async function createUser() {
   let newUsername = await inquirer.prompt([
     { name: 'username', message: 'Choose a username:' },
@@ -117,20 +127,13 @@ async function loginOrCreate() {
   // if no, new prompt for signup
 }
 
-async function getInputLogin() {
-  // inquirer grabs input from the CLI
-  let input = await inquirer.prompt([
-    { name: 'username', message: 'enter your username' },
-  ]);
-  sendMessage(input.username);
-}
-
-async function getInput() {
-  // inquirer grabs input from the CLI
-  let input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
-  sendMessage(input.text);
-  getInput();
-}
+// async function getInputLogin() {
+//   // inquirer grabs input from the CLI
+//   let input = await inquirer.prompt([
+//     { name: 'username', message: 'enter your username' },
+//   ]);
+//   sendMessage(input.username);
+// }
 
 // async function getName() {
 //   // console.clear();
