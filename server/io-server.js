@@ -38,28 +38,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('signin', async (username) => {
-    // "user" is from chat client username input
-    let firstUser = {
-      username: 'lulu',
-      password: 'lulu',
-    };
-    console.log(`username is ${username}`);
-    if (username === firstUser.username) {
+    const user = await User.findOne({ username });
+    if (user) {
       io.emit('validated', true);
     } else {
       io.emit('validated', false);
     }
-
-    // user === firstUser.username ? true : false
-    // MongoClient.connect(url, function(err, db) {
-    //   let dbo = db.db('userz');
-    //   let myObj = { username: 'Beasley', password: 'beasley' };
-    //   dbo.collection('myCollection').insertOne(myObj, function(err, res){
-    //     if (err) throw err;
-    //     console.log('1 document inserted');
-    //     db.close();
-    //   });
-    // })
   });
 
   socket.on('message', (messageFromClient) => {

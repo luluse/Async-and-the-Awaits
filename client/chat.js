@@ -33,7 +33,7 @@ async function login() {
   serverChannel.emit('signin', input.username);
   serverChannel.on('validated', (answer) => {
     if (answer === true) {
-      console.log(`Welcome to the chat, ${username}!`);
+      console.log(`Welcome to the chat, ${input.username}!`);
       getInput();
     } else {
       console.log('Invalid login. Please try again.');
