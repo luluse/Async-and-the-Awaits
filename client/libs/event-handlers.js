@@ -128,7 +128,6 @@ async function createUser() {
 
   serverChannel.emit('signup', newUser);
 
-  ui.log.write('NEW USER: ', newUser);
   ui.log.write(
     chalk
       .rgb(250, 142, 214)
@@ -150,6 +149,7 @@ async function validateMe(username) {
 
 async function getInput(username) {
   let input;
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     input = null;
     input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
@@ -300,7 +300,3 @@ module.exports = {
   serverChannel,
   ui,
 };
-
-// well-defined object keys
-// users[socket.username] = { username: username, id: socket.id };
-//
