@@ -6,10 +6,10 @@ const inquirer = require('inquirer');
 const io = require('socket.io-client');
 const ui = new inquirer.ui.BottomBar();
 
-const serverChannel = io.connect(
-  'https://command-love-interface.herokuapp.com'
-);
-// const serverChannel = io.connect('http://localhost:3001');
+// const serverChannel = io.connect(
+//   'https://command-love-interface.herokuapp.com'
+// );
+const serverChannel = io.connect('http://localhost:3001');
 
 async function loginOrCreate() {
   let input = await inquirer.prompt([
@@ -182,13 +182,12 @@ async function profile(userProfile) {
   // ]);
 }
 
-// Doesn't currently work
+// User needs to manually exit
 async function logout(username) {
   ui.log.write('You chose: LOGOUT');
   ui.log.write(
     'Please press "CTRL/CMD + C" on your keyboard at any time to disconnect. You will be logged out.'
   );
-  // serverChannel.emit('disconnect', username); //????????????????
 }
 
 // MAIN MENU FUNCTION
