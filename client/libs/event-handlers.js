@@ -46,7 +46,7 @@ async function login() {
   };
 
   serverChannel.emit('signin', signupObject);
-  console.log(Date.now(), '1');
+  // console.log(Date.now(), '1');
 }
 
 async function createUser() {
@@ -104,8 +104,8 @@ async function createUser() {
 }
 
 async function validateMe(username) {
-  console.log(Date.now(), '2');
-  console.log('this is username', username);
+  // console.log(Date.now(), '2');
+  // console.log('this is username', username);
   // This is where we'll need to change
   if (username) {
     serverChannel.emit('connected', username);
@@ -114,7 +114,7 @@ async function validateMe(username) {
     loginOrCreate();
   }
 }
-console.log(Date.now(), '3');
+// console.log(Date.now(), '3');
 
 async function getInput(username) {
   let input;
