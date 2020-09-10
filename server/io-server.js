@@ -16,7 +16,6 @@ io.on('connection', (socket) => {
 
   //*************************************************
 
-  console.log('i am into connection');
   console.log('Client connected on: ', socket.id);
 
   socket.on('signup', async (userObj) => {
@@ -31,7 +30,6 @@ io.on('connection', (socket) => {
     );
 
     if (!validUser) {
-      console.log('inside of valid user');
       socket.emit('validated', false);
     } else {
       socket.username = userObj.username; // attaches username to socket from start
@@ -39,7 +37,6 @@ io.on('connection', (socket) => {
       socket.emit('validated', userObj.username);
       // userPool[socket.username] - tries to FIND a key, and if it doesn't, ADDS one
       userPool[socket.username] = { username: socket.username, id: socket.id };
-      console.log(userPool);
     }
   });
 
@@ -80,10 +77,11 @@ io.on('connection', (socket) => {
     // needs to have username on it
     // Ideal payload: sender/recipient and/or room
     // Just need to get array of objects from server
-    let messagesArr = [
-      { message: 'Test message', sender: 'TestMan', room: 'lobby' },
-      { message: 'Test message 2', sender: 'TestMan', room: 'lobby' },
-    ];
+    const messagesArr = await Message.find({}); // this will find ALL messages stored - whereas { sender: username } will get own messages ONLY
+    // let messagesArr = [
+    //   { message: 'Test message', sender: 'TestMan', room: 'lobby' },
+    //   { message: 'Test message 2', sender: 'TestMan', room: 'lobby' },
+    // ];
 
     socket.emit('resume-chat-done', {
       messages: messagesArr,

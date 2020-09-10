@@ -54,6 +54,6 @@ serverChannel.on('resume-chat-done', (payload) => {
   resumeChat(payload);
 });
 
-serverChannel.on('disconnect', () => {
-  serverChannel.emit('disconnect');
-});
+// serverChannel.on('disconnect', () => {
+//   serverChannel.emit('disconnect');
+// });
