@@ -25,7 +25,7 @@ users.statics.authenticateBasic = async function (username, password) {
     const user = await this.findOne(query);
     return user && (await user.comparePassword(password));
   } catch (error) {
-    throw new Error("You've encountered an error", error);
+    throw new Error('You\ve encountered an error:', error);
   }
 };
 
@@ -34,7 +34,7 @@ users.methods.comparePassword = async function (plainPassword) {
     const passwordMatch = await bcrypt.compare(plainPassword, this.password);
     return passwordMatch ? this : null;
   } catch (error) {
-    throw new Error("You've encountered an error", error);
+    throw new Error('You\ve encountered an error:', error);
   }
 };
 
