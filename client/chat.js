@@ -21,7 +21,7 @@ const {
 } = require('./libs/event-handlers');
 
 serverChannel.on('connect', () => {
-  ui.log.write('Im here!', serverChannel.id);
+  ui.log.write('', serverChannel.id); // DANGER: Without this, we get double logs
   loginOrCreate();
 });
 

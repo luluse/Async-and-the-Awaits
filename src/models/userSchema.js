@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-// const jwt = require('jsonwebtoken');
+
 let usersObject = {
   username: { type: String, required: true, unique: true },
   password: { type: String, unique: true },
