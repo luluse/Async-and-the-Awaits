@@ -101,7 +101,7 @@ async function createUser() {
 
   ui.log.write('NEW USER: ', newUser);
   ui.log.write(
-    `Welcome to the Command-Love-Interface, ${newUser.username}! Please log in to get started.`
+    chalk.rgb(250, 142, 214).bold(`Welcome to the Command-Love-Interface, ${newUser.username}! Please log in to get started.`)
   );
   login();
 }
@@ -113,7 +113,7 @@ async function validateMe(username) {
   if (username) {
     serverChannel.emit('connected', username);
   } else {
-    ui.log.write('Invalid login. Please try again.');
+    ui.log.write(chalk.red('Invalid login. Please try again.'));
     loginOrCreate();
   }
 }
@@ -136,7 +136,7 @@ async function getInput(username) {
 async function discover(userPoolArr) {
   ui.log.write('You chose: DISCOVER');
   if (userPoolArr.length) {
-    ui.log.write(`USERS ONLINE: ${userPoolArr.length}`);
+    ui.log.write(chalk.rgb(250, 142, 214)(`USERS ONLINE: ${userPoolArr.length}`));
     userPoolArr.map((user) => {
       ui.log.write(user);
     });
@@ -160,7 +160,7 @@ async function chat(username) {
 
 async function profile(userProfile) {
   ui.log.write('You chose: PROFILE');
-  console.log('USER PROFILE:', userProfile);
+  console.log(chalk.rgb(250, 142, 214)('USER PROFILE:'), userProfile);
 
   // for (const [key, value] of Object.entries(userProfile)) {
   //   console.log(`${key}: ${value}`);
@@ -179,7 +179,7 @@ async function profile(userProfile) {
 async function logout(username) {
   ui.log.write('You chose: LOGOUT');
   ui.log.write(
-    'Please press "CTRL/CMD + C" on your keyboard at any time to disconnect. You will be logged out.'
+    chalk.red('Please press "CTRL/CMD + C" on your keyboard at any time to disconnect. You will be logged out.')
   );
   // serverChannel.emit('disconnect', username); //????????????????
 }
