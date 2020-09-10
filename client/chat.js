@@ -8,24 +8,25 @@ const {
   login,
   createUser,
   loginOrCreate,
+  validateMe,
   getInput,
+  menu,
   sendMessage,
   serverChannel,
   ui,
 } = require('./libs/event-handlers');
 
-// const serverChannel = io.connect(
-//   'https://command-love-interface.herokuapp.com'
-// );
-// const serverChannel = io.connect('http://localhost:3001');
-serverChannel.on('connect', ()=>{
-  ui.log.write("I'm here!", serverChannel.id);
+serverChannel.on('connect', () => {
+  ui.log.write('Im here!', serverChannel.id);
   loginOrCreate();
 });
 
-// serverChannel.emit('join', 'I just joined!');
+serverChannel.on('validated', validateMe);
 
-// Server should send the message back to the sender as confirmation (for testing purposes only until we get it working)
+serverChannel.on('connected', (username) => {
+  menu(username);
+});
+
 serverChannel.on('received', (messageBackFromServer) => {
   ui.log.write(messageBackFromServer);
 });
@@ -33,34 +34,3 @@ serverChannel.on('received', (messageBackFromServer) => {
 serverChannel.on('disconnect', () => {
   serverChannel.emit('disconnect');
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// loginOrCreate();
-// chatWithOnePerson('beas');

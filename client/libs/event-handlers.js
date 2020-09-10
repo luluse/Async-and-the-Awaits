@@ -4,24 +4,24 @@
 require('dotenv').config();
 const inquirer = require('inquirer');
 const io = require('socket.io-client');
+const { Socket } = require('socket.io-client');
 const ui = new inquirer.ui.BottomBar();
 
 const serverChannel = io.connect(
   'https://command-love-interface.herokuapp.com'
 );
 // const serverChannel = io.connect('http://localhost:3001');
-serverChannel.on('validated', validateMe);
+
 async function loginOrCreate() {
   let input = await inquirer.prompt([
     {
       type: 'rawlist',
       name: 'loginChoice',
-      message:
-        'Welcome to the Command-Love-Interface! What would you like to do?',
+      message: 'Welcome to the Command-Love-Interface!',
       choices: ['Log In', 'Sign Up'],
     },
   ]);
-//
+
   if (input.loginChoice === 'Log In') {
     login();
   } else createUser();
@@ -47,26 +47,8 @@ async function login() {
   };
 
   serverChannel.emit('signin', signupObject);
-console.log(Date.now(), '1')
-
- 
+  console.log(Date.now(), '1');
 }
-async function validateMe (username) {
-  console.log(Date.now(), '2')
-  
-      if (username) {
-        // ui.log.write(`Welcome to the chat, ${input.username}!`);
-        ui.log.write(`Welcome to the chat, ${username}!`)
-        setTimeout(()=>{
-          getInput(username);
-        },0);
-      } else {
-        ui.log.write('Invalid login. Please try again.')
-        loginOrCreate();
-      }
-    };
-    console.log(Date.now(), '3');
-
 
 async function createUser() {
   let newUsername = await inquirer.prompt([
@@ -122,29 +104,78 @@ async function createUser() {
   login();
 }
 
+async function validateMe(username) {
+  console.log(Date.now(), '2');
+
+  // This is where we'll need to change
+  if (username) {
+    serverChannel.emit('connected', username);
+  } else {
+    ui.log.write('Invalid login. Please try again.');
+    loginOrCreate();
+  }
+}
+console.log(Date.now(), '3');
+
 async function getInput(username) {
   let input;
-  while(true){
-    input=null;
-     input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
+  while (true) {
+    input = null;
+    input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
 
     // ui.log.write('inside of while loop')
     let message = `[${username}]: ${input.text}`;
-    await serverChannel.emit('messag', message);
+    await serverChannel.broadcast.emit('messag', message);
   }
-  // getInput(username);
 }
 
-// async function sendMessage(username, text) {
+async function discover(username) {
+  ui.log.write('You chose: DISCOVER');
+}
 
-//   ui.log.write('inside of send message')
-// }
+async function chat(username) {
+  getInput(username);
+}
+
+async function updateProfile(username) {
+  ui.log.write('You chose: PROFILE');
+}
+
+async function logout(username) {
+  ui.log.write('You chose: LOGOUT');
+}
+
+async function menu(username) {
+  let input = await inquirer.prompt([
+    {
+      name: 'menuChoice',
+      message:
+        "Welcome to Command Love Interface \n What would you like to do? \n Discover: other coders \n Chat: with hot bots like you \n Profile: update your profile \n Logout: don't go... ",
+      choices: ['Discover', 'Chat', 'Profile', 'Logout'],
+    },
+  ]);
+  if (input.menuChoice === 'Discover') {
+    discover(username);
+  } else if (input.menuChoice === 'Chat') {
+    return chat(username);
+  } else if (input.menuChoice === 'Profile') {
+    return updateProfile(username);
+  } else if (input.menuChoice === 'Logout') {
+    return logout(username);
+  } else {
+    ui.log.write(
+      "Oops! That didn't work! Please try again using the methods provided"
+    );
+  }
+}
 
 module.exports = {
   login,
   createUser,
   loginOrCreate,
+  validateMe,
   getInput,
+  menu,
   // sendMessage,
   serverChannel,
   ui,
