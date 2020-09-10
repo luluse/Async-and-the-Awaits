@@ -2,35 +2,26 @@
 'use strict';
 
 require('dotenv').config();
-const express = require('express');
-const socketIO = require('socket.io');
-const mongoose = require('mongoose');
+const http = require('http').createServer();
+const io = require('socket.io')(http);
 const User = require('../basicSchema');
 
-const mongooseOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-};
-
-const PORT = process.env.PORT || 3001;
-console.log(PORT);
-
-// weird alternate mongo connection method
-// let MongoClient = require('mongodb').MongoClient;
-// let url = 'mongodb://localhost:27017/';
-const MONGODB_URI = process.env.MONGODB_URI;
-mongoose.connect(MONGODB_URI, mongooseOptions);
-
-const server = express().listen(PORT, () =>
-  console.log(`Listening on ${PORT}`)
-);
-
-const io = socketIO(server);
 // const ioServer = io.of('/server');
 
+
+
+
 io.on('connection', (socket) => {
-  console.log('i am in connection');
+// socket.on('message', (messageFromClient) => {
+//   console.log('Received: ', messageFromClient);
+//   io.emit('received', messageFromClient);
+// });
+
+
+//*************************************************
+
+
+  console.log('i am into connection');
   console.log('Client connected on: ', socket.id);
 
   socket.on('signup', async (userObj) => {
@@ -49,23 +40,25 @@ io.on('connection', (socket) => {
       io.emit('validated', false);
     } else io.emit('validated', true);
   });
-  socket.on('chatRequest', request =>{
-    let room1 = request.from+'_'+request.to;
-    console.log('chatRequest');
-    socket.join(room1);
-    console.log('after socket.join()');
-    io.to('luluSe_honky').emit('startChat', room1);
-  });
-  socket.on('chatToLulu', message =>{
-    io.to('luluSe_honky').emit('startChat', message);
-  });
-  socket.on('message', (messageFromClient) => {
+  // socket.on('chatRequest', request =>{
+  //   let room1 = request.from+'_'+request.to;
+  //   console.log('chatRequest');
+  //   socket.join(room1);
+  //   socket.emit('startChat', room1);
+  // });
+  socket.on('messag', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
     io.emit('received', messageFromClient);
   });
 
-
-  // socket.on('disconnect', () => console.log('Client disconnected.'));
+  socket.on('disconnect', () => console.log('Client disconnected.'));
 });
 
-io.on('disconnect', () => console.log('Client disconnected.'));
+module.exports = {
+  server: http,
+  start: (PORT) => {
+    http.listen(PORT, () => {
+      console.log(`Listening on ${PORT}`);
+    });
+  },
+};
