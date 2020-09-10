@@ -8,7 +8,18 @@ const User = require('../basicSchema');
 
 // const ioServer = io.of('/server');
 
+
+
 io.on('connection', (socket) => {
+// socket.on('message', (messageFromClient) => {
+//   console.log('Received: ', messageFromClient);
+//   io.emit('received', messageFromClient);
+// });
+
+
+//*************************************************
+
+
   console.log('i am into connection');
   console.log('Client connected on: ', socket.id);
 
@@ -28,23 +39,18 @@ io.on('connection', (socket) => {
       io.emit('validated', false);
     } else io.emit('validated', true);
   });
-  socket.on('chatRequest', request =>{
-    let room1 = request.from+'_'+request.to;
-    console.log('chatRequest');
-    socket.join(room1);
-    socket.emit('startChat', room1);
-  });
-  socket.on('message', (messageFromClient) => {
+  // socket.on('chatRequest', request =>{
+  //   let room1 = request.from+'_'+request.to;
+  //   console.log('chatRequest');
+  //   socket.join(room1);
+  //   socket.emit('startChat', room1);
+  // });
+  socket.on('messag', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
     io.emit('received', messageFromClient);
   });
 
-<<<<<<< HEAD
-
-  // socket.on('disconnect', () => console.log('Client disconnected.'));
-=======
   socket.on('disconnect', () => console.log('Client disconnected.'));
->>>>>>> 792d1e7cfcce271226d9161bacf56ed13a8532aa
 });
 
 module.exports = {

@@ -10,12 +10,17 @@ const {
   loginOrCreate,
   getInput,
   sendMessage,
+  serverChannel,
 } = require('./libs/event-handlers');
 
 // const serverChannel = io.connect(
 //   'https://command-love-interface.herokuapp.com'
 // );
-const serverChannel = io.connect('http://localhost:3001');
+// const serverChannel = io.connect('http://localhost:3001');
+serverChannel.on('connect', ()=>{
+  console.log("I'm here!", serverChannel.id);
+  loginOrCreate();
+});
 
 // serverChannel.emit('join', 'I just joined!');
 
@@ -28,4 +33,33 @@ serverChannel.on('disconnect', () => {
   serverChannel.emit('disconnect');
 });
 
-loginOrCreate();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// loginOrCreate();
+// chatWithOnePerson('beas');
