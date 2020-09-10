@@ -2,10 +2,10 @@
   "name": "Async-and-the-Awaits",
   "version": "1.0.0",
   "description": "Code401 Midterm Project",
-  "main": "server/io-server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node './server/io-server.js'"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
