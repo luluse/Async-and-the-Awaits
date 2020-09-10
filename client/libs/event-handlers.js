@@ -10,7 +10,7 @@ const serverChannel = io.connect(
   'https://command-love-interface.herokuapp.com'
 );
 // const serverChannel = io.connect('http://localhost:3001');
-
+serverChannel.on('validated', validateMe);
 async function loginOrCreate() {
   let input = await inquirer.prompt([
     {
@@ -21,7 +21,7 @@ async function loginOrCreate() {
       choices: ['Log In', 'Sign Up'],
     },
   ]);
-
+//
   if (input.loginChoice === 'Log In') {
     login();
   } else createUser();
@@ -47,21 +47,26 @@ async function login() {
   };
 
   serverChannel.emit('signin', signupObject);
+console.log(Date.now(), '1')
 
-  serverChannel.on('validated', (answer) => {
-    if (answer === true) {
-      // ui.log.write(`Welcome to the chat, ${input.username}!`);
-      ui.log.write(`Welcome to the chat, ${input.username}!`)
-      setTimeout(()=>{
-        getInput(input.username);
-
-      },0);
-    } else {
-      ui.log.write('Invalid login. Please try again.')
-      loginOrCreate();
-    }
-  });
+ 
 }
+async function validateMe (username) {
+  console.log(Date.now(), '2')
+  
+      if (username) {
+        // ui.log.write(`Welcome to the chat, ${input.username}!`);
+        ui.log.write(`Welcome to the chat, ${username}!`)
+        setTimeout(()=>{
+          getInput(username);
+        },0);
+      } else {
+        ui.log.write('Invalid login. Please try again.')
+        loginOrCreate();
+      }
+    };
+    console.log(Date.now(), '3');
+
 
 async function createUser() {
   let newUsername = await inquirer.prompt([
@@ -123,7 +128,7 @@ async function getInput(username) {
     input=null;
      input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
 
-    ui.log.write('inside of while loop')
+    // ui.log.write('inside of while loop')
     let message = `[${username}]: ${input.text}`;
     await serverChannel.emit('messag', message);
   }
