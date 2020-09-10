@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
     if (!validUser) {
       console.log('inside of valid user');
       io.emit('validated', false);
-    } else io.emit('validated', true);
+    } else io.emit('validated', userObj.username);
   });
   // socket.on('chatRequest', request =>{
   //   let room1 = request.from+'_'+request.to;
