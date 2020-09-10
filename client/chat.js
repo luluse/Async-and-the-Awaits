@@ -4,6 +4,7 @@
 require('dotenv').config();
 const inquirer = require('inquirer');
 
+
 const io = require('socket.io-client');
 
 const serverChannel = io.connect(
@@ -33,7 +34,7 @@ async function getInput(username) {
 }
 
 function sendMessage(username, text) {
-  let message = `[${username}]: ${text}`;
+  let message = `[${username}]: ${text}`;  
   serverChannel.emit('message', message);
 }
 

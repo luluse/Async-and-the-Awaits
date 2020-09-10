@@ -17,10 +17,6 @@ const mongooseOptions = {
 const PORT = process.env.PORT || 3001;
 console.log(PORT);
 
-// weird alternate mongo connection method
-// let MongoClient = require('mongodb').MongoClient;
-// let url = 'mongodb://localhost:27017/';
-// const MONGODB_URI = process.env.MONGODB_URI;
 mongoose.connect('mongodb+srv://alexwhan:f05dBGIPZtXJMshV@chats.4bzzl.mongodb.net/chat?retryWrites=true&w=majority', mongooseOptions);
 
 const server = express().listen(PORT, () =>
@@ -30,12 +26,13 @@ const server = express().listen(PORT, () =>
 const io = socketIO(server);
 // const ioServer = io.of('/server');
 
-const newMessage = ({ message: 'Hello there kind gangsters' });
-function saveMessage(data){
-  const message = Message.create(data);
-  console.log('Stored in database', message);
-}
-saveMessage(newMessage);
+// hard coded message collection save
+// const newMessage = ({ message: 'Testing this out' });
+// function saveMessage(data){
+//   const message = Message.create(data);
+//   console.log('Stored in database', message);
+// }
+// saveMessage(newMessage);
 
 io.on('connection', (socket) => {
   console.log('Client connected on: ', socket.id);
@@ -56,6 +53,12 @@ io.on('connection', (socket) => {
       io.emit('validated', false);
     } else io.emit('validated', true);
   });
+
+  // Trying to insert messages into collection 
+  // socket.on('message', async (messageObj) => {
+  //   const message = await Message.InsertOne(messageObj);
+  //   console.log(message, 'Has been saved!');
+  // });
 
   socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
