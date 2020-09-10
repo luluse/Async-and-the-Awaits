@@ -296,6 +296,7 @@ module.exports = {
   chat: newChat,
   profile,
   logout,
+  resumeChat,
   // sendMessage,
   serverChannel,
   ui,
