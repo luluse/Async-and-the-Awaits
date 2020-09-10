@@ -12,6 +12,7 @@ const figlet = require('figlet');
 // const serverChannel = io.connect(
 //   'https://command-love-interface.herokuapp.com'
 // );
+
 const serverChannel = io.connect('http://localhost:3001');
 
 figlet.text(
@@ -67,7 +68,6 @@ async function login() {
   };
 
   serverChannel.emit('signin', signupObject);
-  // console.log(Date.now(), '1');
 }
 
 async function createUser() {
@@ -140,9 +140,6 @@ async function createUser() {
 }
 
 async function validateMe(username) {
-  // console.log(Date.now(), '2');
-  // console.log('this is username', username);
-  // This is where we'll need to change
   if (username) {
     serverChannel.emit('connected', username);
   } else {
@@ -150,7 +147,6 @@ async function validateMe(username) {
     loginOrCreate();
   }
 }
-// console.log(Date.now(), '3');
 
 async function getInput(username) {
   let input;
@@ -158,9 +154,16 @@ async function getInput(username) {
     input = null;
     input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
 
-    // ui.log.write('inside of while loop')
-    let message = `[${username}]: ${input.text}`;
-    await serverChannel.emit('message', message);
+    // Desired message structure:
+    // `[${username}]: ${input.text}`;
+
+    let messageObj = {
+      message: input.text,
+      sender: username,
+      room: 'lobby',
+    };
+
+    await serverChannel.emit('message', messageObj);
   }
 }
 
@@ -172,25 +175,25 @@ async function discover(userPoolArr) {
     ui.log.write(
       chalk.rgb(250, 142, 214)(`USERS ONLINE: ${userPoolArr.length}`)
     );
-    userPoolArr.map((user) => {
+    userPoolArr.forEach((user) => {
       ui.log.write(user);
     });
   } else {
     ui.log.write(chalk.rgb(250, 142, 214)('No users currently online.'));
   }
-
-  // let input = await inquirer.prompt([
-  //   {
-  //     type: 'list',
-  //     name: 'choice',
-  //     message: 'Options: ',
-  //     choices: ['Previous', 'Next', 'Back to Main Menu', 'Logout'],
-  //   },
-  // ]);
 }
 
-async function chat(username) {
+async function newChat(username) {
   getInput(username);
+}
+
+async function resumeChat(payload) {
+  // "messages"
+  // Remember: Getting back many/an array of objects (each with sender, message keys)
+  payload.messages.forEach((message) => {
+    ui.log.write(`[${message.sender}]: ${message.message}`);
+  });
+  getInput(payload.username); // needs to happen here
 }
 
 async function profile(userProfile) {
@@ -210,11 +213,11 @@ async function profile(userProfile) {
   // ]);
 }
 
-// Doesn't currently work
+// User needs to manually exit
 async function logout(username) {
   ui.log.write('If you must log out, press "CTRL/CMD + C" on your keyboard.');
   setTimeout(() => {
-    ui.log.write("\n \n Please don't go.");
+    ui.log.write('\n \n Please don\t go.');
   }, 1000);
   setTimeout(() => {
     ui.log.write('\n \n Seriously, I am begging you.');
@@ -259,14 +262,16 @@ async function menu(username) {
           .italic('- Discover: See other coders profiles \n') +
         chalk.rgb(250, 142, 214).italic('- Chat: with hot bots like you \n') +
         chalk.rgb(250, 142, 214).italic('- Profile: update your profile \n') +
-        chalk.rgb(250, 142, 214).italic("- Logout: don't go... \n \n"),
-      choices: ['Discover', 'Chat', 'Profile', 'Logout'],
+        chalk.rgb(250, 142, 214).italic('- Logout: don\t go.. \n \n'),
+      choices: ['Discover', 'New Chat', 'Resume Chat', 'Profile', 'Logout'],
     },
   ]);
   if (input.menuChoice === 'Discover') {
     serverChannel.emit('discover');
-  } else if (input.menuChoice === 'Chat') {
-    return chat(username);
+  } else if (input.menuChoice === 'New Chat') {
+    return newChat(username);
+  } else if (input.menuChoice === 'Resume Chat') {
+    serverChannel.emit('resumeChat', username); // username will be a string
   } else if (input.menuChoice === 'Profile') {
     serverChannel.emit('profile', username);
   } else if (input.menuChoice === 'Logout') {
@@ -274,7 +279,7 @@ async function menu(username) {
   } else {
     ui.log.write(
       chalk.red(
-        "Oops! That didn't work! Please try again using the methods provided"
+        'Oops! That didn\t work. Please try again using the methods provided.'
       )
     );
   }
@@ -288,7 +293,7 @@ module.exports = {
   getInput,
   menu,
   discover,
-  chat,
+  chat: newChat,
   profile,
   logout,
   // sendMessage,
