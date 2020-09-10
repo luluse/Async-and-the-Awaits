@@ -8,18 +8,14 @@ const User = require('../basicSchema');
 
 // const ioServer = io.of('/server');
 
-
-
+const userPool = {};
 
 io.on('connection', (socket) => {
-// socket.on('message', (messageFromClient) => {
-//   console.log('Received: ', messageFromClient);
-//   io.emit('received', messageFromClient);
-// });
+  socket.on('connected', (username) => {
+    socket.emit('connected', username);
+  });
 
-
-//*************************************************
-
+  //*************************************************
 
   console.log('i am into connection');
   console.log('Client connected on: ', socket.id);
@@ -34,24 +30,54 @@ io.on('connection', (socket) => {
       userObj.username,
       userObj.password
     );
-    console.log('result from authenticate basic', validUser);
+
     if (!validUser) {
       console.log('inside of valid user');
       socket.emit('validated', false);
-    } else socket.emit('validated', userObj.username);
+    } else {
+      socket.username = userObj.username; // attaches username to socket from start
+      // At this point, username is known all the time
+      socket.emit('validated', userObj.username);
+      // userPool[socket.username] - tries to FIND a key, and if it doesn't, ADDS one
+      userPool[socket.username] = { username: socket.username, id: socket.id };
+      console.log(userPool);
+    }
   });
+
   // socket.on('chatRequest', request =>{
   //   let room1 = request.from+'_'+request.to;
   //   console.log('chatRequest');
   //   socket.join(room1);
   //   socket.emit('startChat', room1);
   // });
-  socket.on('messag', (messageFromClient) => {
+
+  socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
     io.emit('received', messageFromClient);
   });
 
-  socket.on('disconnect', () => console.log('Client disconnected.'));
+  socket.on('disconnect', (socket) => {
+    delete userPool[socket.username]; // knows disconnect happens and removes it from pool
+    console.log('USER POOL: ', userPool);
+    console.log('Client disconnected.');
+  });
+
+  /////////////////// MENU OPTION LISTENERS ////////////////////
+  socket.on('discover', () => {
+    let onlineUsers = Object.keys(userPool);
+    socket.emit('discover', onlineUsers);
+  });
+
+  socket.on('profile', async (userProfile) => {
+    console.log('USER PROF:', userProfile);
+    const user = await User.find({ username: userProfile });
+    console.log('my user from DB?:', user);
+    socket.emit('profile', user);
+  });
+
+  socket.on('error', (error) => {
+    socket.emit('error', error);
+  });
 });
 
 module.exports = {
