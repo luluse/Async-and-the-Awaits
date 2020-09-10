@@ -124,26 +124,46 @@ async function getInput(username) {
 
     // ui.log.write('inside of while loop')
     let message = `[${username}]: ${input.text}`;
-    await serverChannel.broadcast.emit('messag', message);
+    await serverChannel.emit('messag', message);
   }
 }
 
+////////////////////// MENU OPTION FUNCTIONS //////////////////////
+
 async function discover(username) {
   ui.log.write('You chose: DISCOVER');
+  let input = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: 'Options: ',
+      choices: ['Previous', 'Next', 'Back to Main Menu', 'Logout'],
+    },
+  ]);
 }
 
 async function chat(username) {
   getInput(username);
 }
 
-async function updateProfile(username) {
+async function profile(username) {
   ui.log.write('You chose: PROFILE');
+  let input = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: 'Options: ',
+      choices: ['Show My Profile', 'Back to Main Menu', 'Logout'],
+    },
+  ]);
 }
 
 async function logout(username) {
   ui.log.write('You chose: LOGOUT');
+  io.emit('disconnect', username); //????????????????
 }
 
+// MAIN MENU FUNCTION
 async function menu(username) {
   console.log('INSIDE MENU');
   let input = await inquirer.prompt([
@@ -151,7 +171,7 @@ async function menu(username) {
       type: 'list',
       name: 'menuChoice',
       message:
-        "Welcome to Command Love Interface \n What would you like to do? \n Discover: other coders \n Chat: with hot bots like you \n Profile: update your profile \n Logout: don't go... ",
+        "Welcome to Command Love Interface \n What would you like to do? \n Discover: other coders \n Chat: with hot bots like you \n Profile: update your profile \n Logout: don't go...",
       choices: ['Discover', 'Chat', 'Profile', 'Logout'],
     },
   ]);
@@ -160,7 +180,7 @@ async function menu(username) {
   } else if (input.menuChoice === 'Chat') {
     return chat(username);
   } else if (input.menuChoice === 'Profile') {
-    return updateProfile(username);
+    return profile(username);
   } else if (input.menuChoice === 'Logout') {
     return logout(username);
   } else {
@@ -181,3 +201,7 @@ module.exports = {
   serverChannel,
   ui,
 };
+
+// well-defined object keys
+// users[socket.username] = { username: username, id: socket.id };
+//
