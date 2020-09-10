@@ -2,10 +2,10 @@
   "name": "Async-and-the-Awaits",
   "version": "1.0.0",
   "description": "Code401 Midterm Project",
-  "main": "server/io-server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node './server/io-server.js'"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -23,11 +23,14 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
     "inquirer": "^7.3.3",
     "mongoose": "^5.10.3",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 2
   },
   "homepage": "https://github.com/Async-and-the-Awaits/Async-and-the-Awaits#readme"
 }

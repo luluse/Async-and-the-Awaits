@@ -1,71 +1,91 @@
+/* eslint-disable comma-dangle */
 'use strict';
 
 require('dotenv').config();
-const express = require('express');
-const socketIO = require('socket.io');
-const mongoose = require('mongoose');
+const http = require('http').createServer();
+const io = require('socket.io')(http);
 const User = require('../basicSchema');
 
-const mongooseOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex:true,
-};
-
-const PORT = process.env.PORT || 3001;
-console.log(PORT);
-
-// weird alternate mongo connection method
-// let MongoClient = require('mongodb').MongoClient;
-// let url = 'mongodb://localhost:27017/';
-
-mongoose.connect('mongodb://localhost:27017/userz', mongooseOptions);
-
-const server = express()
-  .listen(PORT, () => console.log(`Listening on ${PORT}`));
-
-const io = socketIO(server);
 // const ioServer = io.of('/server');
 
-io.on('connection', socket => {
+const userPool = {};
+
+io.on('connection', (socket) => {
+  socket.on('connected', (username) => {
+    socket.emit('connected', username);
+  });
+
+  //*************************************************
+
+  console.log('i am into connection');
   console.log('Client connected on: ', socket.id);
 
-
-  socket.on('signup',  async userObj =>{
+  socket.on('signup', async (userObj) => {
     const user = await User.create(userObj);
     console.log(user, ' Has Been Saved!');
   });
-  
-  socket.on('signin', async username => { // "user" is from chat client username input
-    let firstUser = {
-      username: 'lulu',
-      password: 'lulu',
-    };
-    console.log(`username is ${username}`);
-    if(username === firstUser.username){
-      io.emit('validated', true);
-    } else {
-      io.emit('validated', false);    
-    }
 
-    // user === firstUser.username ? true : false
-    // MongoClient.connect(url, function(err, db) {
-    //   let dbo = db.db('userz');
-    //   let myObj = { username: 'Beasley', password: 'beasley' };
-    //   dbo.collection('myCollection').insertOne(myObj, function(err, res){
-    //     if (err) throw err;
-    //     console.log('1 document inserted');
-    //     db.close();
-    //   });
-    // })
+  socket.on('signin', async (userObj) => {
+    const validUser = await User.authenticateBasic(
+      userObj.username,
+      userObj.password
+    );
+
+    if (!validUser) {
+      console.log('inside of valid user');
+      socket.emit('validated', false);
+    } else {
+      socket.username = userObj.username; // attaches username to socket from start
+      // At this point, username is known all the time
+      socket.emit('validated', userObj.username);
+      // userPool[socket.username] - tries to FIND a key, and if it doesn't, ADDS one
+      userPool[socket.username] = { username: socket.username, id: socket.id };
+      console.log(userPool);
+    }
   });
 
-  socket.on('message', messageFromClient => {
+  // socket.on('chatRequest', request =>{
+  //   let room1 = request.from+'_'+request.to;
+  //   console.log('chatRequest');
+  //   socket.join(room1);
+  //   socket.emit('startChat', room1);
+  // });
+
+  // Try saving message here
+  socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
     io.emit('received', messageFromClient);
   });
 
-  // socket.on('disconnect', () => console.log('Client disconnected.'));
+  socket.on('disconnect', (socket) => {
+    delete userPool[socket.username]; // knows disconnect happens and removes it from pool
+    console.log('USER POOL: ', userPool);
+    console.log('Client disconnected.');
+  });
+
+  /////////////////// MENU OPTION LISTENERS ////////////////////
+  socket.on('discover', () => {
+    let onlineUsers = Object.keys(userPool);
+    socket.emit('discover', onlineUsers);
+  });
+
+  socket.on('profile', async (userProfile) => {
+    console.log('USER PROF:', userProfile);
+    const user = await User.find({ username: userProfile });
+    console.log('my user from DB?:', user);
+    socket.emit('profile', user);
+  });
+
+  socket.on('error', (error) => {
+    socket.emit('error', error);
+  });
 });
 
-io.on('disconnect', () => console.log('Client disconnected.'));
+module.exports = {
+  server: http,
+  start: (PORT) => {
+    http.listen(PORT, () => {
+      console.log(`Listening on ${PORT}`);
+    });
+  },
+};
