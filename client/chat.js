@@ -22,7 +22,6 @@ const {
 } = require('./libs/event-handlers');
 
 serverChannel.on('connect', () => {
-  ui.log.write('Im here!', serverChannel.id);
   loginOrCreate();
 });
 

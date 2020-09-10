@@ -67,9 +67,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('profile', async (userProfile) => {
-    console.log('USER PROF:', userProfile);
     const user = await User.find({ username: userProfile });
-    console.log('my user from DB?:', user);
     socket.emit('profile', user);
   });
 

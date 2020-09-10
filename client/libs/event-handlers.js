@@ -204,7 +204,7 @@ async function menu(username) {
       type: 'list',
       name: 'menuChoice',
       message:
-        "Welcome to Command Love Interface! \n What would you like to do? \n Discover: other coders \n Chat: with hot bots like you \n Profile: update your profile \n Logout: don't go...",
+        'Welcome to Command Love Interface! \n What would you like to do?',
       choices: ['Discover', 'New Chat', 'Resume Chat', 'Profile', 'Logout'],
     },
   ]);
@@ -220,7 +220,7 @@ async function menu(username) {
     return logout(username);
   } else {
     ui.log.write(
-      "Oops! That didn't work! Please try again using the methods provided"
+      'Oops! That didn\t work. Please try again using the methods provided.'
     );
   }
 }
