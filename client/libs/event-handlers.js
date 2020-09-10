@@ -14,12 +14,27 @@ const serverChannel = io.connect(
 );
 // const serverChannel = io.connect('http://localhost:3001');
 
+figlet.text('Command Love interface',{
+  font: 'Big',
+  verticalLayout: 'fitted',
+  width: 60,
+  whitespaceBreak: true
+}, function(err,data){
+  if(err){
+    console.log('Something went wrong');
+    console.dir(err);
+    return;
+  }
+  console.log(data);
+});
+
+
 async function loginOrCreate() {
   let input = await inquirer.prompt([
     {
       type: 'list',
       name: 'loginChoice',
-      message: chalk.rgb(250, 142, 214).bold('Welcome to the Command-Love-Interface!'),
+      message: chalk.rgb(250, 142, 214).bold('Please log in or sign up!'),
       choices: ['Log In', 'Sign Up'],
     },
   ]);
@@ -141,7 +156,7 @@ async function discover(userPoolArr) {
       ui.log.write(user);
     });
   } else {
-    ui.log.write('No users currently online.');
+    ui.log.write(chalk.rgb(250, 142, 214)('No users currently online.'));
   }
 
   // let input = await inquirer.prompt([
@@ -191,8 +206,7 @@ async function menu(username) {
     {
       type: 'list',
       name: 'menuChoice',
-      message:
-      chalk.bgMagenta('Beauty is in the Back End \n') + chalk.white('---------------------------\n') + chalk.rgb(250, 142, 214).bold('What would you like to do? \n') + chalk.white('---------------------------\n')  + chalk.rgb(250, 142, 214).bold('Discover: See other coders profiles \n') + chalk.white('---------------------------\n') + chalk.rgb(250, 142, 214).bold('Chat: with hot bots like you \n') + chalk.white('---------------------------\n') + chalk.rgb(250, 142, 214).bold('Profile: update your profile \n') + chalk.white('---------------------------\n') + chalk.rgb(250, 142, 214).bold('Logout: don\'t go... \n') + chalk.white('---------------------------\n'),
+      message: chalk.bgMagenta('Beauty is in the Back End \n') + chalk.rgb(250, 142, 214).bold('Welcome to the Command-L' + emoji.get('heart')+ ' ve-Interface! \n') + chalk.white('---------------------------\n') + chalk.rgb(250, 142, 214).bold('What would you like to do? \n') + chalk.white('---------------------------\n')  + chalk.rgb(250, 142, 214).italic('Discover: See other coders profiles \n') + chalk.white('---------------------------\n') + chalk.rgb(250, 142, 214).italic('Chat: with hot bots like you \n') + chalk.white('---------------------------\n') + chalk.rgb(250, 142, 214).italic('Profile: update your profile \n') + chalk.white('---------------------------\n') + chalk.rgb(250, 142, 214).italic('Logout: don\'t go... \n') + chalk.white('---------------------------\n'),
       choices: ['Discover', 'Chat', 'Profile', 'Logout'],
     },
   ]);
@@ -206,7 +220,7 @@ async function menu(username) {
     return logout(username);
   } else {
     ui.log.write(
-      'Oops! That didn\'t work! Please try again using the methods provided'
+      chalk.red('Oops! That didn\'t work! Please try again using the methods provided')
     );
   }
 }
