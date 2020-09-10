@@ -159,7 +159,7 @@ async function getInput(username) {
 ////////////////////// MENU OPTION FUNCTIONS //////////////////////
 
 async function discover(userPoolArr) {
-  ui.log.write('You chose: DISCOVER');
+  // ui.log.write('You chose: DISCOVER');
   if (userPoolArr.length) {
     ui.log.write(chalk.rgb(250, 142, 214)(`USERS ONLINE: ${userPoolArr.length}`));
     userPoolArr.map((user) => {
@@ -184,8 +184,7 @@ async function chat(username) {
 }
 
 async function profile(userProfile) {
-  ui.log.write('You chose: PROFILE');
-  console.log(chalk.rgb(250, 142, 214)('USER PROFILE:'), userProfile);
+  console.log(chalk.rgb(250, 142, 214)('YOUR PROFILE:'), userProfile);
 
   // for (const [key, value] of Object.entries(userProfile)) {
   //   console.log(`${key}: ${value}`);
@@ -217,7 +216,6 @@ async function logout(username) {
 
 // MAIN MENU FUNCTION
 async function menu(username) {
-  // console.log('INSIDE MENU');
   let input = await inquirer.prompt([
     {
       type: 'list',
