@@ -21,7 +21,7 @@ async function loginOrCreate() {
       choices: ['Log In', 'Sign Up'],
     },
   ]);
-
+//
   if (input.loginChoice === 'Log In') {
     login();
   } else createUser();
