@@ -22,9 +22,12 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "chalk": "^4.1.0",
     "dotenv": "^8.2.0",
+    "figlet": "^1.5.0",
     "inquirer": "^7.3.3",
     "mongoose": "^5.10.3",
+    "node-emoji": "^1.10.0",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0"
   },

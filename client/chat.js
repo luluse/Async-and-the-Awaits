@@ -15,13 +15,14 @@ const {
   chat,
   profile,
   logout,
+  resumeChat,
   sendMessage,
   serverChannel,
   ui,
 } = require('./libs/event-handlers');
 
 serverChannel.on('connect', () => {
-  ui.log.write('Im here!', serverChannel.id);
+  ui.log.write('', serverChannel.id); // DANGER: Without this, we get double logs
   loginOrCreate();
 });
 
@@ -34,7 +35,9 @@ serverChannel.on('connected', (username) => {
 });
 
 serverChannel.on('received', (messageBackFromServer) => {
-  ui.log.write(messageBackFromServer);
+  ui.log.write(
+    `[${messageBackFromServer.sender}]: ${messageBackFromServer.message}`
+  );
 });
 
 /////////////////// MENU OPTION LISTENERS ////////////////////
@@ -46,6 +49,11 @@ serverChannel.on('profile', (userProfile) => {
   profile(userProfile);
 });
 
-serverChannel.on('disconnect', () => {
-  serverChannel.emit('disconnect');
+serverChannel.on('resume-chat-done', (payload) => {
+  // need an array from whatever emits 'resume-chat-done'
+  resumeChat(payload);
 });
+
+// serverChannel.on('disconnect', () => {
+//   serverChannel.emit('disconnect');
+// });

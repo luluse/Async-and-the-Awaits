@@ -4,9 +4,8 @@
 require('dotenv').config();
 const http = require('http').createServer();
 const io = require('socket.io')(http);
-const User = require('../basicSchema');
-
-// const ioServer = io.of('/server');
+const User = require('../src/models/userSchema');
+const Message = require('../src/models/messageSchema.js');
 
 const userPool = {};
 
@@ -17,7 +16,6 @@ io.on('connection', (socket) => {
 
   //*************************************************
 
-  console.log('i am into connection');
   console.log('Client connected on: ', socket.id);
 
   socket.on('signup', async (userObj) => {
@@ -32,7 +30,6 @@ io.on('connection', (socket) => {
     );
 
     if (!validUser) {
-      console.log('inside of valid user');
       socket.emit('validated', false);
     } else {
       socket.username = userObj.username; // attaches username to socket from start
@@ -40,7 +37,6 @@ io.on('connection', (socket) => {
       socket.emit('validated', userObj.username);
       // userPool[socket.username] - tries to FIND a key, and if it doesn't, ADDS one
       userPool[socket.username] = { username: socket.username, id: socket.id };
-      console.log(userPool);
     }
   });
 
@@ -51,9 +47,9 @@ io.on('connection', (socket) => {
   //   socket.emit('startChat', room1);
   // });
 
-  // Try saving message here
   socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
+    Message.create(messageFromClient); // passing in object with a key of messageFromClient and value of whatever it was
     io.emit('received', messageFromClient);
   });
 
@@ -70,10 +66,24 @@ io.on('connection', (socket) => {
   });
 
   socket.on('profile', async (userProfile) => {
-    console.log('USER PROF:', userProfile);
     const user = await User.find({ username: userProfile });
-    console.log('my user from DB?:', user);
     socket.emit('profile', user);
+  });
+
+  socket.on('resumeChat', async (username) => {
+    // needs to have username on it
+    // Ideal payload: sender/recipient and/or room
+    // Just need to get array of objects from server
+    const messagesArr = await Message.find({}); // this will find ALL messages stored - whereas { sender: username } will get own messages ONLY
+    // let messagesArr = [
+    //   { message: 'Test message', sender: 'TestMan', room: 'lobby' },
+    //   { message: 'Test message 2', sender: 'TestMan', room: 'lobby' },
+    // ];
+
+    socket.emit('resume-chat-done', {
+      messages: messagesArr,
+      username: username, // SOON: Require "ROOM" as well (will have to be an object)
+    });
   });
 
   socket.on('error', (error) => {
