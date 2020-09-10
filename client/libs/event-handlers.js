@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable comma-dangle */
 'use strict';
 
@@ -267,7 +268,7 @@ async function menu(username) {
           .italic(
             '- Discover ' +
               emoji.get('eyes') +
-              '  : See other coders profiles \n'
+              "  : See other coders' profiles \n"
           ) +
         chalk
           .rgb(250, 142, 214)
@@ -283,7 +284,7 @@ async function menu(username) {
           ) +
         chalk
           .rgb(250, 142, 214)
-          .italic('- Logout ' + emoji.get('x') + '  : don\t go... \n \n'),
+          .italic('- Logout ' + emoji.get('x') + "  : don't go... \n \n"),
       choices: ['Discover', 'New Chat', 'Resume Chat', 'Profile', 'Logout'],
     },
   ]);
