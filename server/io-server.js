@@ -4,10 +4,8 @@
 require('dotenv').config();
 const http = require('http').createServer();
 const io = require('socket.io')(http);
-const User = require('../basicSchema');
-const Message = require('../messageSchema');
-
-// const ioServer = io.of('/server');
+const User = require('../src/models/basicSchema');
+const Message = require('../src/models/messageSchema');
 
 const userPool = {};
 
