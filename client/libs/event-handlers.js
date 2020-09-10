@@ -128,7 +128,7 @@ async function getInput(username) {
     input=null;
      input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
 
-    ui.log.write('inside of while loop')
+    // ui.log.write('inside of while loop')
     let message = `[${username}]: ${input.text}`;
     await serverChannel.emit('messag', message);
   }
