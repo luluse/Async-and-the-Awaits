@@ -51,15 +51,21 @@ io.on('connection', (socket) => {
   //   socket.emit('startChat', room1);
   // });
 
-  socket.on('messag', (messageFromClient) => {
+  socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
     io.emit('received', messageFromClient);
   });
 
   socket.on('disconnect', (socket) => {
-    console.log('Client disconnected.');
     delete userPool[socket.username]; // knows disconnect happens and removes it from pool
-    console.log(userPool);
+    console.log('USER POOL: ', userPool);
+    console.log('Client disconnected.');
+  });
+
+  /////////////////// MENU OPTION LISTENERS ////////////////////
+  socket.on('discover', () => {
+    let onlineUsers = Object.keys(userPool);
+    socket.emit('discover', onlineUsers);
   });
 
   socket.on('error', (error) => {

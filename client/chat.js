@@ -11,6 +11,10 @@ const {
   validateMe,
   getInput,
   menu,
+  discover,
+  chat,
+  profile,
+  logout,
   sendMessage,
   serverChannel,
   ui,
@@ -31,6 +35,15 @@ serverChannel.on('connected', (username) => {
 
 serverChannel.on('received', (messageBackFromServer) => {
   ui.log.write(messageBackFromServer);
+});
+
+/////////////////// MENU OPTION LISTENERS ////////////////////
+serverChannel.on('discover', (userPoolArr) => {
+  discover(userPoolArr);
+});
+
+serverChannel.on('profile', (userProfile) => {
+  profile(userProfile);
 });
 
 serverChannel.on('disconnect', () => {

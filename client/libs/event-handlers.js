@@ -124,38 +124,48 @@ async function getInput(username) {
 
     // ui.log.write('inside of while loop')
     let message = `[${username}]: ${input.text}`;
-    await serverChannel.emit('messag', message);
+    await serverChannel.emit('message', message);
   }
 }
 
 ////////////////////// MENU OPTION FUNCTIONS //////////////////////
 
-async function discover(username) {
+async function discover(userPoolArr) {
   ui.log.write('You chose: DISCOVER');
-  let input = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'choice',
-      message: 'Options: ',
-      choices: ['Previous', 'Next', 'Back to Main Menu', 'Logout'],
-    },
-  ]);
+  if (userPoolArr.length) {
+    ui.log.write(`USERS ONLINE: ${userPoolArr.length}`);
+    userPoolArr.map((user) => {
+      ui.log.write(user);
+    });
+  } else {
+    ui.log.write('No users currently online.');
+  }
+
+  // let input = await inquirer.prompt([
+  //   {
+  //     type: 'list',
+  //     name: 'choice',
+  //     message: 'Options: ',
+  //     choices: ['Previous', 'Next', 'Back to Main Menu', 'Logout'],
+  //   },
+  // ]);
 }
 
 async function chat(username) {
   getInput(username);
 }
 
-async function profile(username) {
+async function profile(userProfile) {
   ui.log.write('You chose: PROFILE');
-  let input = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'choice',
-      message: 'Options: ',
-      choices: ['Show My Profile', 'Back to Main Menu', 'Logout'],
-    },
-  ]);
+
+  // let input = await inquirer.prompt([
+  //   {
+  //     type: 'list',
+  //     name: 'choice',
+  //     message: 'Options: ',
+  //     choices: ['Show My Profile', 'Back to Main Menu', 'Logout'],
+  //   },
+  // ]);
 }
 
 async function logout(username) {
@@ -171,12 +181,12 @@ async function menu(username) {
       type: 'list',
       name: 'menuChoice',
       message:
-        "Welcome to Command Love Interface \n What would you like to do? \n Discover: other coders \n Chat: with hot bots like you \n Profile: update your profile \n Logout: don't go...",
+        "Welcome to Command Love Interface! \n What would you like to do? \n Discover: other coders \n Chat: with hot bots like you \n Profile: update your profile \n Logout: don't go...",
       choices: ['Discover', 'Chat', 'Profile', 'Logout'],
     },
   ]);
   if (input.menuChoice === 'Discover') {
-    discover(username);
+    serverChannel.emit('discover');
   } else if (input.menuChoice === 'Chat') {
     return chat(username);
   } else if (input.menuChoice === 'Profile') {
@@ -197,6 +207,10 @@ module.exports = {
   validateMe,
   getInput,
   menu,
+  discover,
+  chat,
+  profile,
+  logout,
   // sendMessage,
   serverChannel,
   ui,
