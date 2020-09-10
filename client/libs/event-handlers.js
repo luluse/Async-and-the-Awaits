@@ -157,6 +157,10 @@ async function chat(username) {
 
 async function profile(userProfile) {
   ui.log.write('You chose: PROFILE');
+  console.log('USER PROFILE:', userProfile);
+
+  // for (const [key, value] of Object.entries(userProfile)) {
+  //   console.log(`${key}: ${value}`);
 
   // let input = await inquirer.prompt([
   //   {
@@ -190,7 +194,7 @@ async function menu(username) {
   } else if (input.menuChoice === 'Chat') {
     return chat(username);
   } else if (input.menuChoice === 'Profile') {
-    return profile(username);
+    serverChannel.emit('profile', username);
   } else if (input.menuChoice === 'Logout') {
     return logout(username);
   } else {
