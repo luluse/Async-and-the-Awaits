@@ -5,6 +5,7 @@ require('dotenv').config();
 const http = require('http').createServer();
 const io = require('socket.io')(http);
 const User = require('../basicSchema');
+const Message = require('../messageSchema');
 
 // const ioServer = io.of('/server');
 
@@ -54,6 +55,7 @@ io.on('connection', (socket) => {
   // Try saving message here
   socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
+    Message.create(messageFromClient); // passing in object with a key of messageFromClient and value of whatever it was
     io.emit('received', messageFromClient);
   });
 
@@ -74,6 +76,21 @@ io.on('connection', (socket) => {
     const user = await User.find({ username: userProfile });
     console.log('my user from DB?:', user);
     socket.emit('profile', user);
+  });
+
+  socket.on('resumeChat', async (username) => {
+    // needs to have username on it
+    // Ideal payload: sender/recipient and/or room
+    // Just need to get array of objects from server
+    let messagesArr = [
+      { message: 'Test message', sender: 'TestMan', room: 'lobby' },
+      { message: 'Test message 2', sender: 'TestMan', room: 'lobby' },
+    ];
+
+    socket.emit('resume-chat-done', {
+      messages: messagesArr,
+      username: username, // SOON: Require "ROOM" as well (will have to be an object)
+    });
   });
 
   socket.on('error', (error) => {

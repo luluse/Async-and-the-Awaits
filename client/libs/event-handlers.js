@@ -6,10 +6,10 @@ const inquirer = require('inquirer');
 const io = require('socket.io-client');
 const ui = new inquirer.ui.BottomBar();
 
-const serverChannel = io.connect(
-  'https://command-love-interface.herokuapp.com'
-);
-// const serverChannel = io.connect('http://localhost:3001');
+// const serverChannel = io.connect(
+//   'https://command-love-interface.herokuapp.com'
+// );
+const serverChannel = io.connect('http://localhost:3001');
 
 async function loginOrCreate() {
   let input = await inquirer.prompt([
@@ -122,9 +122,15 @@ async function getInput(username) {
     input = null;
     input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
 
-    // ui.log.write('inside of while loop')
-    let message = `[${username}]: ${input.text}`;
-    await serverChannel.emit('message', message);
+    // let message = `[${username}]: ${input.text}`;
+
+    let messageObj = {
+      message: input.text,
+      sender: username,
+      room: 'lobby',
+    };
+
+    await serverChannel.emit('message', messageObj);
   }
 }
 
@@ -151,8 +157,17 @@ async function discover(userPoolArr) {
   // ]);
 }
 
-async function chat(username) {
+async function newChat(username) {
   getInput(username);
+}
+
+async function resumeChat(payload) {
+  // "messages"
+  // Remember: Getting back many/an array of objects (each with sender, message keys)
+  payload.messages.forEach((message) => {
+    ui.log.write(`[${message.sender}]: ${message.message}`);
+  });
+  getInput(payload.username); // needs to happen here
 }
 
 async function profile(userProfile) {
@@ -190,13 +205,15 @@ async function menu(username) {
       name: 'menuChoice',
       message:
         "Welcome to Command Love Interface! \n What would you like to do? \n Discover: other coders \n Chat: with hot bots like you \n Profile: update your profile \n Logout: don't go...",
-      choices: ['Discover', 'Chat', 'Profile', 'Logout'],
+      choices: ['Discover', 'New Chat', 'Resume Chat', 'Profile', 'Logout'],
     },
   ]);
   if (input.menuChoice === 'Discover') {
     serverChannel.emit('discover');
-  } else if (input.menuChoice === 'Chat') {
-    return chat(username);
+  } else if (input.menuChoice === 'New Chat') {
+    return newChat(username);
+  } else if (input.menuChoice === 'Resume Chat') {
+    serverChannel.emit('resumeChat', username); // username will be a string
   } else if (input.menuChoice === 'Profile') {
     serverChannel.emit('profile', username);
   } else if (input.menuChoice === 'Logout') {
@@ -216,9 +233,10 @@ module.exports = {
   getInput,
   menu,
   discover,
-  chat,
+  chat: newChat,
   profile,
   logout,
+  resumeChat,
   // sendMessage,
   serverChannel,
   ui,

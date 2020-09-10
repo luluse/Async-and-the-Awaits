@@ -15,6 +15,7 @@ const {
   chat,
   profile,
   logout,
+  resumeChat,
   sendMessage,
   serverChannel,
   ui,
@@ -34,7 +35,9 @@ serverChannel.on('connected', (username) => {
 });
 
 serverChannel.on('received', (messageBackFromServer) => {
-  ui.log.write(messageBackFromServer);
+  ui.log.write(
+    `[${messageBackFromServer.sender}]: ${messageBackFromServer.message}`
+  );
 });
 
 /////////////////// MENU OPTION LISTENERS ////////////////////
@@ -44,6 +47,11 @@ serverChannel.on('discover', (userPoolArr) => {
 
 serverChannel.on('profile', (userProfile) => {
   profile(userProfile);
+});
+
+serverChannel.on('resume-chat-done', (payload) => {
+  // need an array from whatever emits 'resume-chat-done'
+  resumeChat(payload);
 });
 
 serverChannel.on('disconnect', () => {
