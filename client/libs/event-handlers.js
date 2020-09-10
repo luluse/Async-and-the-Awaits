@@ -4,11 +4,12 @@
 require('dotenv').config();
 const inquirer = require('inquirer');
 const io = require('socket.io-client');
+const ui = new inquirer.ui.BottomBar();
 
-// const serverChannel = io.connect(
-//   'https://command-love-interface.herokuapp.com'
-// );
-const serverChannel = io.connect('http://localhost:3001');
+const serverChannel = io.connect(
+  'https://command-love-interface.herokuapp.com'
+);
+// const serverChannel = io.connect('http://localhost:3001');
 
 async function loginOrCreate() {
   let input = await inquirer.prompt([
@@ -49,13 +50,14 @@ async function login() {
 
   serverChannel.on('validated', (answer) => {
     if (answer === true) {
-      console.log(`Welcome to the chat, ${input.username}!`);
+      // ui.log.write(`Welcome to the chat, ${input.username}!`);
+      ui.log.write(`Welcome to the chat, ${input.username}!`)
       setTimeout(()=>{
         getInput(input.username);
 
       },0);
     } else {
-      console.log('Invalid login. Please try again.');
+      ui.log.write('Invalid login. Please try again.')
       loginOrCreate();
     }
   });
@@ -108,18 +110,20 @@ async function createUser() {
 
   serverChannel.emit('signup', newUser);
 
-  console.log('NEW USER: ', newUser);
-  console.log(
+  ui.log.write('NEW USER: ', newUser);
+  ui.log.write(
     `Welcome to the Command-Love-Interface, ${newUser.username}! Please log in to get started.`
   );
   login();
 }
 
 async function getInput(username) {
+  let input;
   while(true){
-    let input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
+    input=null;
+     input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
 
-    console.log('inside of while loop')
+    ui.log.write('inside of while loop')
     let message = `[${username}]: ${input.text}`;
     await serverChannel.emit('messag', message);
   }
@@ -128,7 +132,7 @@ async function getInput(username) {
 
 // async function sendMessage(username, text) {
 
-//   console.log('inside of send message')
+//   ui.log.write('inside of send message')
 // }
 
 module.exports = {
@@ -138,4 +142,5 @@ module.exports = {
   getInput,
   // sendMessage,
   serverChannel,
+  ui,
 };

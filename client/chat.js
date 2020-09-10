@@ -11,6 +11,7 @@ const {
   getInput,
   sendMessage,
   serverChannel,
+  ui,
 } = require('./libs/event-handlers');
 
 // const serverChannel = io.connect(
@@ -18,7 +19,7 @@ const {
 // );
 // const serverChannel = io.connect('http://localhost:3001');
 serverChannel.on('connect', ()=>{
-  console.log("I'm here!", serverChannel.id);
+  ui.log.write("I'm here!", serverChannel.id);
   loginOrCreate();
 });
 
@@ -26,7 +27,7 @@ serverChannel.on('connect', ()=>{
 
 // Server should send the message back to the sender as confirmation (for testing purposes only until we get it working)
 serverChannel.on('received', (messageBackFromServer) => {
-  console.log(messageBackFromServer);
+  ui.log.write(messageBackFromServer);
 });
 
 serverChannel.on('disconnect', () => {
