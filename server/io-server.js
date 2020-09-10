@@ -8,18 +8,17 @@ const User = require('../basicSchema');
 
 // const ioServer = io.of('/server');
 
-
-
-
 io.on('connection', (socket) => {
-// socket.on('message', (messageFromClient) => {
-//   console.log('Received: ', messageFromClient);
-//   io.emit('received', messageFromClient);
-// });
+  // socket.on('message', (messageFromClient) => {
+  //   console.log('Received: ', messageFromClient);
+  //   io.emit('received', messageFromClient);
+  // });
 
+  socket.on('connected', (username) => {
+    socket.emit('connected', username);
+  });
 
-//*************************************************
-
+  //*************************************************
 
   console.log('i am into connection');
   console.log('Client connected on: ', socket.id);

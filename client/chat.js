@@ -21,7 +21,9 @@ serverChannel.on('connect', () => {
   loginOrCreate();
 });
 
-serverChannel.on('validated', validateMe);
+serverChannel.on('validated', (username) => {
+  validateMe(username);
+});
 
 serverChannel.on('connected', (username) => {
   menu(username);

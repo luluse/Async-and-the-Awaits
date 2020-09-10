@@ -4,18 +4,17 @@
 require('dotenv').config();
 const inquirer = require('inquirer');
 const io = require('socket.io-client');
-const { Socket } = require('socket.io-client');
 const ui = new inquirer.ui.BottomBar();
 
-const serverChannel = io.connect(
-  'https://command-love-interface.herokuapp.com'
-);
-// const serverChannel = io.connect('http://localhost:3001');
+// const serverChannel = io.connect(
+//   'https://command-love-interface.herokuapp.com'
+// );
+const serverChannel = io.connect('http://localhost:3001');
 
 async function loginOrCreate() {
   let input = await inquirer.prompt([
     {
-      type: 'rawlist',
+      type: 'list',
       name: 'loginChoice',
       message: 'Welcome to the Command-Love-Interface!',
       choices: ['Log In', 'Sign Up'],
@@ -106,7 +105,7 @@ async function createUser() {
 
 async function validateMe(username) {
   console.log(Date.now(), '2');
-
+  console.log('this is username', username);
   // This is where we'll need to change
   if (username) {
     serverChannel.emit('connected', username);
@@ -146,8 +145,10 @@ async function logout(username) {
 }
 
 async function menu(username) {
+  console.log('INSIDE MENU');
   let input = await inquirer.prompt([
     {
+      type: 'list',
       name: 'menuChoice',
       message:
         "Welcome to Command Love Interface \n What would you like to do? \n Discover: other coders \n Chat: with hot bots like you \n Profile: update your profile \n Logout: don't go... ",
