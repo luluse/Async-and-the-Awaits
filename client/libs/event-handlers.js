@@ -5,6 +5,9 @@ require('dotenv').config();
 const inquirer = require('inquirer');
 const io = require('socket.io-client');
 const ui = new inquirer.ui.BottomBar();
+const chalk = require('chalk');
+const emoji = require('node-emoji');
+const figlet = require('figlet');
 
 const serverChannel = io.connect(
   'https://command-love-interface.herokuapp.com'
@@ -16,7 +19,7 @@ async function loginOrCreate() {
     {
       type: 'list',
       name: 'loginChoice',
-      message: 'Welcome to the Command-Love-Interface!',
+      message: chalk.rgb(250, 142, 214).bold('Welcome to the Command-Love-Interface!'),
       choices: ['Log In', 'Sign Up'],
     },
   ]);
@@ -183,13 +186,13 @@ async function logout(username) {
 
 // MAIN MENU FUNCTION
 async function menu(username) {
-  console.log('INSIDE MENU');
+  // console.log('INSIDE MENU');
   let input = await inquirer.prompt([
     {
       type: 'list',
       name: 'menuChoice',
       message:
-        "Welcome to Command Love Interface! \n What would you like to do? \n Discover: other coders \n Chat: with hot bots like you \n Profile: update your profile \n Logout: don't go...",
+      chalk.bgMagenta('Beauty is in the Back End \n') + chalk.white('---------------------------\n') + chalk.rgb(250, 142, 214).bold('What would you like to do? \n') + chalk.white('---------------------------\n')  + chalk.rgb(250, 142, 214).bold('Discover: See other coders profiles \n') + chalk.white('---------------------------\n') + chalk.rgb(250, 142, 214).bold('Chat: with hot bots like you \n') + chalk.white('---------------------------\n') + chalk.rgb(250, 142, 214).bold('Profile: update your profile \n') + chalk.white('---------------------------\n') + chalk.rgb(250, 142, 214).bold('Logout: don\'t go... \n') + chalk.white('---------------------------\n'),
       choices: ['Discover', 'Chat', 'Profile', 'Logout'],
     },
   ]);
@@ -203,7 +206,7 @@ async function menu(username) {
     return logout(username);
   } else {
     ui.log.write(
-      "Oops! That didn't work! Please try again using the methods provided"
+      'Oops! That didn\'t work! Please try again using the methods provided'
     );
   }
 }
