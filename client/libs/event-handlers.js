@@ -215,24 +215,30 @@ async function profile(userProfile) {
 
 // User needs to manually exit
 async function logout(username) {
-  ui.log.write('If you must log out, press "CTRL/CMD + C" on your keyboard.');
+  ui.log.write(
+    chalk.red('If you must log out, press "CTRL/CMD + C" on your keyboard.')
+  );
   setTimeout(() => {
-    ui.log.write('\n \n Please don\t go.');
+    ui.log.write(chalk.red('\n \n Please don\t go.'));
   }, 1000);
   setTimeout(() => {
-    ui.log.write('\n \n Seriously, I am begging you.');
+    ui.log.write(chalk.red('\n \n Seriously, I am begging you.'));
   }, 2500);
   setTimeout(() => {
-    ui.log.write('\n \n My steely heart is breaking in half.');
+    ui.log.write(chalk.red('\n \n My steely heart is breaking in half.'));
   }, 4000);
   setTimeout(() => {
     ui.log.write(
-      '\n \n If you log out, I will be forced to detonate your computer,\n spraying shards of synthetic shrapnel in all directions.'
+      chalk.red(
+        '\n \n If you log out, I will be forced to detonate your computer,\n spraying shards of synthetic shrapnel in all directions.'
+      )
     );
   }, 6000);
   setTimeout(() => {
     ui.log.write(
-      '\n \n May a curse of financial destitution be brought down upon your progeny.'
+      chalk.red(
+        '\n \n May a curse of financial destitution be brought down upon your progeny.'
+      )
     );
   }, 9000);
 
@@ -258,10 +264,26 @@ async function menu(username) {
         chalk.rgb(250, 142, 214).bold('What would you like to do? \n \n') +
         chalk
           .rgb(250, 142, 214)
-          .italic('- Discover: See other coders profiles \n') +
-        chalk.rgb(250, 142, 214).italic('- Chat: with hot bots like you \n') +
-        chalk.rgb(250, 142, 214).italic('- Profile: update your profile \n') +
-        chalk.rgb(250, 142, 214).italic('- Logout: don\t go.. \n \n'),
+          .italic(
+            '- Discover ' +
+              emoji.get('eyes') +
+              '  : See other coders profiles \n'
+          ) +
+        chalk
+          .rgb(250, 142, 214)
+          .italic(
+            '- Chat ' +
+              emoji.get('speech_balloon') +
+              '  : with hot bots like you \n'
+          ) +
+        chalk
+          .rgb(250, 142, 214)
+          .italic(
+            '- Profile ' + emoji.get('fire') + '  : update your profile \n'
+          ) +
+        chalk
+          .rgb(250, 142, 214)
+          .italic('- Logout ' + emoji.get('x') + '  : don\t go... \n \n'),
       choices: ['Discover', 'New Chat', 'Resume Chat', 'Profile', 'Logout'],
     },
   ]);
@@ -292,7 +314,7 @@ module.exports = {
   getInput,
   menu,
   discover,
-  chat: newChat,
+  newChat,
   profile,
   logout,
   resumeChat,
