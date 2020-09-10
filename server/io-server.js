@@ -51,6 +51,7 @@ io.on('connection', (socket) => {
   //   socket.emit('startChat', room1);
   // });
 
+  // Try saving message here
   socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
     io.emit('received', messageFromClient);
