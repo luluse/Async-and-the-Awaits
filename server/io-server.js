@@ -2,39 +2,23 @@
 'use strict';
 
 require('dotenv').config();
-const express = require('express');
-const socketIO = require('socket.io');
-const mongoose = require('mongoose');
+const http = require('http').createServer();
+const io = require('socket.io')(http);
 const User = require('../basicSchema');
 const Message = require('../messageSchema.js');
 
-const mongooseOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-};
-
-const PORT = process.env.PORT || 3001;
-console.log(PORT);
-
-mongoose.connect('mongodb+srv://alexwhan:f05dBGIPZtXJMshV@chats.4bzzl.mongodb.net/chat?retryWrites=true&w=majority', mongooseOptions);
-
-const server = express().listen(PORT, () =>
-  console.log(`Listening on ${PORT}`)
-);
-
-const io = socketIO(server);
 // const ioServer = io.of('/server');
 
-// hard coded message collection save
-// const newMessage = ({ message: 'Testing this out' });
-// function saveMessage(data){
-//   const message = Message.create(data);
-//   console.log('Stored in database', message);
-// }
-// saveMessage(newMessage);
+const userPool = {};
 
 io.on('connection', (socket) => {
+  socket.on('connected', (username) => {
+    socket.emit('connected', username);
+  });
+
+  //*************************************************
+
+  console.log('i am into connection');
   console.log('Client connected on: ', socket.id);
 
   socket.on('signup', async (userObj) => {
@@ -47,17 +31,25 @@ io.on('connection', (socket) => {
       userObj.username,
       userObj.password
     );
-    console.log('result from authenticate basic', validUser);
+
     if (!validUser) {
       console.log('inside of valid user');
-      io.emit('validated', false);
-    } else io.emit('validated', true);
+      socket.emit('validated', false);
+    } else {
+      socket.username = userObj.username; // attaches username to socket from start
+      // At this point, username is known all the time
+      socket.emit('validated', userObj.username);
+      // userPool[socket.username] - tries to FIND a key, and if it doesn't, ADDS one
+      userPool[socket.username] = { username: socket.username, id: socket.id };
+      console.log(userPool);
+    }
   });
 
-  // Trying to insert messages into collection 
-  // socket.on('message', async (messageObj) => {
-  //   const message = await Message.InsertOne(messageObj);
-  //   console.log(message, 'Has been saved!');
+  // socket.on('chatRequest', request =>{
+  //   let room1 = request.from+'_'+request.to;
+  //   console.log('chatRequest');
+  //   socket.join(room1);
+  //   socket.emit('startChat', room1);
   // });
 
   socket.on('message', (messageFromClient) => {
@@ -65,7 +57,35 @@ io.on('connection', (socket) => {
     io.emit('received', messageFromClient);
   });
 
-  // socket.on('disconnect', () => console.log('Client disconnected.'));
+  socket.on('disconnect', (socket) => {
+    delete userPool[socket.username]; // knows disconnect happens and removes it from pool
+    console.log('USER POOL: ', userPool);
+    console.log('Client disconnected.');
+  });
+
+  /////////////////// MENU OPTION LISTENERS ////////////////////
+  socket.on('discover', () => {
+    let onlineUsers = Object.keys(userPool);
+    socket.emit('discover', onlineUsers);
+  });
+
+  socket.on('profile', async (userProfile) => {
+    console.log('USER PROF:', userProfile);
+    const user = await User.find({ username: userProfile });
+    console.log('my user from DB?:', user);
+    socket.emit('profile', user);
+  });
+
+  socket.on('error', (error) => {
+    socket.emit('error', error);
+  });
 });
 
-io.on('disconnect', () => console.log('Client disconnected.'));
+module.exports = {
+  server: http,
+  start: (PORT) => {
+    http.listen(PORT, () => {
+      console.log(`Listening on ${PORT}`);
+    });
+  },
+};
