@@ -14,7 +14,7 @@ const serverChannel = io.connect(
 );
 // const serverChannel = io.connect('http://localhost:3001');
 
-figlet.text('Command Love interface',{
+figlet.text('Command Love Interface',{
   font: 'Big',
   verticalLayout: 'fitted',
   width: 60,
@@ -202,29 +202,28 @@ async function profile(userProfile) {
 
 // Doesn't currently work
 async function logout(username) {
-  ui.log.write('If you must log out, press "CTRL/CMD + C" on your keyboard.');
-  setTimeout(()=>{ ui.log.write('\n \n Please don\'t go.'); }, 1000);
+  ui.log.write(chalk.red('If you must log out, press "CTRL/CMD + C" on your keyboard.'));
+  setTimeout(()=>{ ui.log.write(chalk.red('\n \n Please don\'t go.')); }, 1000);
   setTimeout(()=>{
-    ui.log.write('\n \n Seriously, I am begging you.'); }, 2500);
-  setTimeout(()=>{ ui.log.write('\n \n My steely heart is breaking in half.');}, 4000);
+    ui.log.write(chalk.red('\n \n Seriously, I am begging you.')); }, 2500);
+  setTimeout(()=>{ ui.log.write(chalk.red('\n \n My steely heart is breaking in half.'));}, 4000);
   setTimeout(()=>{
-    ui.log.write('\n \n If you log out, I will be forced to detonate your computer,\n spraying shards of synthetic shrapnel in all directions.' );}, 6000);
+    ui.log.write(chalk.red('\n \n If you log out, I will be forced to detonate your computer,\n spraying shards of synthetic shrapnel in all directions.' ));}, 6000);
   setTimeout(()=>{
-    ui.log.write('\n \n May a curse of financial destitution be brought down upon your progeny.');}, 9000);
-
+    ui.log.write(chalk.red('\n \n May a curse of financial destitution be brought down upon your progeny.'));}, 9000);
 
   // serverChannel.emit('disconnect', username); //????????????????
 }
 
 // MAIN MENU FUNCTION
 async function menu(username) {
-  console.log('INSIDE MENU');
+  // console.log('INSIDE MENU');
   let input = await inquirer.prompt([
     {
       type: 'list',
       name: 'menuChoice',
       message:
-      '\n' + chalk.bgMagenta('Beauty is in the Back End \n') + chalk.rgb(250, 142, 214).bold('\nWelcome to the Command-L' + emoji.get('heart')+ ' ve-Interface! \n \n') + chalk.rgb(250, 142, 214).bold('What would you like to do? \n \n') + chalk.rgb(250, 142, 214).italic('- Discover: See other coders profiles \n') + chalk.rgb(250, 142, 214).italic('- Chat: with hot bots like you \n') + chalk.rgb(250, 142, 214).italic('- Profile: update your profile \n') + chalk.rgb(250, 142, 214).italic('- Logout: don\'t go... \n \n'),
+      '\n' + chalk.bgMagenta('Beauty is in the Back End \n') + chalk.rgb(250, 142, 214).bold('\nWelcome to the Command-L' + emoji.get('heart')+ ' ve-Interface! \n \n') + chalk.rgb(250, 142, 214).bold('What would you like to do? \n \n') + chalk.rgb(250, 142, 214).italic('- Discover ' + emoji.get('eyes')+ '  : See other coders profiles \n') + chalk.rgb(250, 142, 214).italic('- Chat ' + emoji.get('speech_balloon')+ '  : with hot bots like you \n') + chalk.rgb(250, 142, 214).italic('- Profile ' + emoji.get('fire')+ '  : update your profile \n') + chalk.rgb(250, 142, 214).italic('- Logout ' + emoji.get('x')+ '  : don\'t go... \n \n'),
       choices: ['Discover', 'Chat', 'Profile', 'Logout'],
     },
   ]);
