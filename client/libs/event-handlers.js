@@ -46,7 +46,6 @@ async function login() {
   };
 
   serverChannel.emit('signin', signupObject);
-  // console.log(Date.now(), '1');
 }
 
 async function createUser() {
@@ -104,9 +103,6 @@ async function createUser() {
 }
 
 async function validateMe(username) {
-  // console.log(Date.now(), '2');
-  // console.log('this is username', username);
-  // This is where we'll need to change
   if (username) {
     serverChannel.emit('connected', username);
   } else {
@@ -114,7 +110,6 @@ async function validateMe(username) {
     loginOrCreate();
   }
 }
-// console.log(Date.now(), '3');
 
 async function getInput(username) {
   let input;
@@ -198,7 +193,6 @@ async function logout(username) {
 
 // MAIN MENU FUNCTION
 async function menu(username) {
-  console.log('INSIDE MENU');
   let input = await inquirer.prompt([
     {
       type: 'list',
