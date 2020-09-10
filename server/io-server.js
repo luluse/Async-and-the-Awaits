@@ -4,8 +4,8 @@
 require('dotenv').config();
 const http = require('http').createServer();
 const io = require('socket.io')(http);
-const User = require('../basicSchema');
-const Message = require('../messageSchema.js');
+const User = require('../src/models/userSchema');
+const Message = require('../src/models/messageSchema.js');
 
 // const ioServer = io.of('/server');
 
