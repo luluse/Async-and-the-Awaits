@@ -61,6 +61,10 @@ io.on('connection', (socket) => {
     delete userPool[socket.username]; // knows disconnect happens and removes it from pool
     console.log(userPool);
   });
+
+  socket.on('error', (error) => {
+    socket.emit('error', error);
+  });
 });
 
 module.exports = {
