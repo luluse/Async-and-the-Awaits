@@ -9,24 +9,28 @@ const chalk = require('chalk');
 const emoji = require('node-emoji');
 const figlet = require('figlet');
 
-const serverChannel = io.connect(
-  'https://command-love-interface.herokuapp.com'
-);
-// const serverChannel = io.connect('http://localhost:3001');
+// const serverChannel = io.connect(
+//   'https://command-love-interface.herokuapp.com'
+// );
+const serverChannel = io.connect('http://localhost:3001');
 
-figlet.text('Command Love interface',{
-  font: 'Big',
-  verticalLayout: 'fitted',
-  width: 60,
-  whitespaceBreak: true
-}, function(err,data){
-  if(err){
-    console.log('Something went wrong');
-    console.dir(err);
-    return;
+figlet.text(
+  'Command Love interface',
+  {
+    font: 'Big',
+    verticalLayout: 'fitted',
+    width: 60,
+    whitespaceBreak: true,
+  },
+  function (err, data) {
+    if (err) {
+      console.log('Something went wrong');
+      console.dir(err);
+      return;
+    }
+    console.log(data);
   }
-  console.log(data);
-});
+);
 
 async function loginOrCreate() {
   let input = await inquirer.prompt([
@@ -126,7 +130,11 @@ async function createUser() {
 
   ui.log.write('NEW USER: ', newUser);
   ui.log.write(
-    chalk.rgb(250, 142, 214).bold(`Welcome to the Command-Love-Interface, ${newUser.username}! Please log in to get started.`)
+    chalk
+      .rgb(250, 142, 214)
+      .bold(
+        `Welcome to the Command-Love-Interface, ${newUser.username}! Please log in to get started.`
+      )
   );
   login();
 }
@@ -161,7 +169,9 @@ async function getInput(username) {
 async function discover(userPoolArr) {
   ui.log.write('You chose: DISCOVER');
   if (userPoolArr.length) {
-    ui.log.write(chalk.rgb(250, 142, 214)(`USERS ONLINE: ${userPoolArr.length}`));
+    ui.log.write(
+      chalk.rgb(250, 142, 214)(`USERS ONLINE: ${userPoolArr.length}`)
+    );
     userPoolArr.map((user) => {
       ui.log.write(user);
     });
@@ -203,15 +213,25 @@ async function profile(userProfile) {
 // Doesn't currently work
 async function logout(username) {
   ui.log.write('If you must log out, press "CTRL/CMD + C" on your keyboard.');
-  setTimeout(()=>{ ui.log.write('\n \n Please don\'t go.'); }, 1000);
-  setTimeout(()=>{
-    ui.log.write('\n \n Seriously, I am begging you.'); }, 2500);
-  setTimeout(()=>{ ui.log.write('\n \n My steely heart is breaking in half.');}, 4000);
-  setTimeout(()=>{
-    ui.log.write('\n \n If you log out, I will be forced to detonate your computer,\n spraying shards of synthetic shrapnel in all directions.' );}, 6000);
-  setTimeout(()=>{
-    ui.log.write('\n \n May a curse of financial destitution be brought down upon your progeny.');}, 9000);
-
+  setTimeout(() => {
+    ui.log.write("\n \n Please don't go.");
+  }, 1000);
+  setTimeout(() => {
+    ui.log.write('\n \n Seriously, I am begging you.');
+  }, 2500);
+  setTimeout(() => {
+    ui.log.write('\n \n My steely heart is breaking in half.');
+  }, 4000);
+  setTimeout(() => {
+    ui.log.write(
+      '\n \n If you log out, I will be forced to detonate your computer,\n spraying shards of synthetic shrapnel in all directions.'
+    );
+  }, 6000);
+  setTimeout(() => {
+    ui.log.write(
+      '\n \n May a curse of financial destitution be brought down upon your progeny.'
+    );
+  }, 9000);
 
   // serverChannel.emit('disconnect', username); //????????????????
 }
@@ -224,7 +244,22 @@ async function menu(username) {
       type: 'list',
       name: 'menuChoice',
       message:
-      '\n' + chalk.bgMagenta('Beauty is in the Back End \n') + chalk.rgb(250, 142, 214).bold('\nWelcome to the Command-L' + emoji.get('heart')+ ' ve-Interface! \n \n') + chalk.rgb(250, 142, 214).bold('What would you like to do? \n \n') + chalk.rgb(250, 142, 214).italic('- Discover: See other coders profiles \n') + chalk.rgb(250, 142, 214).italic('- Chat: with hot bots like you \n') + chalk.rgb(250, 142, 214).italic('- Profile: update your profile \n') + chalk.rgb(250, 142, 214).italic('- Logout: don\'t go... \n \n'),
+        '\n' +
+        chalk.bgMagenta('Beauty is in the Back End \n') +
+        chalk
+          .rgb(250, 142, 214)
+          .bold(
+            '\nWelcome to the Command-L' +
+              emoji.get('heart') +
+              ' ve-Interface! \n \n'
+          ) +
+        chalk.rgb(250, 142, 214).bold('What would you like to do? \n \n') +
+        chalk
+          .rgb(250, 142, 214)
+          .italic('- Discover: See other coders profiles \n') +
+        chalk.rgb(250, 142, 214).italic('- Chat: with hot bots like you \n') +
+        chalk.rgb(250, 142, 214).italic('- Profile: update your profile \n') +
+        chalk.rgb(250, 142, 214).italic("- Logout: don't go... \n \n"),
       choices: ['Discover', 'Chat', 'Profile', 'Logout'],
     },
   ]);
@@ -238,7 +273,9 @@ async function menu(username) {
     return logout(username);
   } else {
     ui.log.write(
-      chalk.red('Oops! That didn\'t work! Please try again using the methods provided')
+      chalk.red(
+        "Oops! That didn't work! Please try again using the methods provided"
+      )
     );
   }
 }
