@@ -20,7 +20,7 @@ let {
   profile,
 } = require('../client/libs/event-handlers.js');
 
-let username = 'beasleydotcom';
+let username = 'honkyTonkyMusaic';
 jest.useFakeTimers();
 it('should write "Invalid login. Please try again." when validateMe is called with bad username', async () => {
   ui.log.write = jest.fn();

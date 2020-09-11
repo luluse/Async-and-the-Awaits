@@ -46,7 +46,7 @@ describe('route tests', ()=>{
     it('should trigger login() when loginOrCreate() is called with an empty payload', () => {
         expect(1+2).toBe(3);
     });
-    it('should ', () => {
+    it('should have equal I/O each time read', () => {
         expect(require('../client/libs/event-handlers.js')).toBe(require('../client/libs/event-handlers.js'));
     });
     //end of describe block

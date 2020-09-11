@@ -1,9 +1,10 @@
-/* eslint-disable comma-dangle */
+#!/usr/bin/env node
 'use strict';
 
 require('dotenv').config();
 const inquirer = require('inquirer');
 const io = require('socket.io-client');
+const chalk = require('chalk');
 const {
   login,
   createUser,
@@ -40,9 +41,21 @@ serverChannel.on('received', (messageBackFromServer) => {
   );
 });
 
+serverChannel.on('private-message-received', (privateMessageObj) => {
+  ui.log.write(
+    chalk.green(
+      `New private message from: [${privateMessageObj.from}]: ${privateMessageObj.message}`
+    )
+  );
+});
+
+serverChannel.on('private-message-failed', () => {
+  ui.log.write('Private message failed to send.');
+});
+
 /////////////////// MENU OPTION LISTENERS ////////////////////
-serverChannel.on('discover', (userPoolArr) => {
-  discover(userPoolArr);
+serverChannel.on('discovered', (onlineUsers) => {
+  discover(onlineUsers);
 });
 
 serverChannel.on('profile', (userProfile) => {
@@ -50,10 +63,5 @@ serverChannel.on('profile', (userProfile) => {
 });
 
 serverChannel.on('resume-chat-done', (payload) => {
-  // need an array from whatever emits 'resume-chat-done'
   resumeChat(payload);
 });
-
-// serverChannel.on('disconnect', () => {
-//   serverChannel.emit('disconnect');
-// });

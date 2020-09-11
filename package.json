@@ -4,7 +4,7 @@
   "description": "Code401 Midterm Project",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage --verbose",
+    "test": "jest --coverage --verbose --forceExit",
     "start": "node index.js"
   },
   "repository": {

@@ -3,15 +3,21 @@
 let EVENTS = {};
 
 function emit(event, ...args) {
-    EVENTS[event] && EVENTS[event].forEach(func => func(...args));
+  EVENTS[event] && EVENTS[event].forEach((func) => function (...args) {});
 }
 
-function on(event, funct){
-    if(EVENTS[event]){return EVENTS[event].push(func);}
+function on(event, funct) {
+  if (EVENTS[event]) {
+    return EVENTS[event].push(funct);
+  }
 }
 
-const socket = {on, emit};
+const socket = { on, emit };
 
-const io = {connect() {return socket;}}
+const io = {
+  connect() {
+    return socket;
+  },
+};
 
 module.exports = io;
