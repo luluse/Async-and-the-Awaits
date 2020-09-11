@@ -9,7 +9,7 @@ const ui = new inquirer.ui.BottomBar();
 const chalk = require('chalk');
 const emoji = require('node-emoji');
 const figlet = require('figlet');
-const { server } = require('../../server/io-server');
+const pink = chalk.rgb(250, 142, 214);
 
 const serverChannel = io.connect(
   'https://command-love-interface.herokuapp.com'
@@ -42,7 +42,7 @@ async function loginOrCreate() {
     {
       type: 'list',
       name: 'loginChoice',
-      message: chalk.rgb(250, 142, 214).bold('Please log in or sign up!'),
+      message: pink.bold('Please log in or sign up!'),
       choices: ['Log In', 'Sign Up'],
     },
   ]);
@@ -133,11 +133,9 @@ async function createUser() {
   serverChannel.emit('signup', newUser);
 
   ui.log.write(
-    chalk
-      .rgb(250, 142, 214)
-      .bold(
-        `Welcome to the Command-Love-Interface, ${newUser.username}! Please log in to get started.`
-      )
+    pink.bold(
+      `Welcome to the Command-Love-Interface, ${newUser.username}! Please log in to get started.`
+    )
   );
   login();
 }
@@ -198,24 +196,18 @@ async function sendPrivateMessageHandler(input) {
 async function discover(onlineUsers) {
   ui.log.write('You chose: DISCOVER');
   if (onlineUsers.length) {
-    ui.log.write(
-      chalk.rgb(250, 142, 214)(`USERS ONLINE: ${onlineUsers.length}`)
-    );
+    ui.log.write(pink(`USERS ONLINE: ${onlineUsers.length}`));
     onlineUsers.forEach((user) => {
-      ui.log.write(chalk.rgb(250, 142, 214)('===================='));
-      ui.log.write(
-        chalk.rgb(250, 142, 214).bold('> Username: ', user.username)
-      );
+      ui.log.write(pink('===================='));
+      ui.log.write(pink.bold('> Username: ', user.username));
       ui.log.write(
         chalk.bold('> Favorite Programming Language: ', user.favLanguage)
       );
-      ui.log.write(
-        chalk.rgb(250, 142, 214).bold('> Operating System: ', user.os)
-      );
+      ui.log.write(pink.bold('> Operating System: ', user.os));
       ui.log.write(chalk.bold('> About Me: ', user.description));
     });
   } else {
-    ui.log.write(chalk.rgb(250, 142, 214)('No users currently online.'));
+    ui.log.write(pink('No users currently online.'));
   }
 
   let input = await inquirer.prompt([
@@ -232,16 +224,12 @@ async function discover(onlineUsers) {
   }
 }
 
-const pink = chalk.rgb(250, 142, 214);
-
 async function newChat(username) {
   ui.log.write(pink("Enter: '--exit' to return to the main menu"));
   ui.log.write(
-    chalk.rgb(
-      250,
-      142,
-      214
-    )("Enter: '---<username>' to send a private message to the specified user")
+    pink(
+      "Enter: '---<username>' to send a private message to the specified user"
+    )
   );
   trueOrFalse = true;
   getInput(username);
@@ -252,22 +240,18 @@ async function resumeChat(payload) {
     ui.log.write(`[${message.sender}]: ${message.message}`);
   });
   trueOrFalse = true;
+  ui.log.write(pink("Enter: '--exit' to return to the main menu"));
   ui.log.write(
-    chalk.rgb(250, 142, 214)("Enter: '--exit' to return to the main menu")
-  );
-  ui.log.write(
-    chalk.rgb(
-      250,
-      142,
-      214
-    )("Enter: '---<username>' to send a private message to the specified user")
+    pink(
+      "Enter: '---<username>' to send a private message to the specified user"
+    )
   );
   getInput(payload.username); // needs to happen here
 }
 
 async function profile(userProfile) {
   ui.log.write('You chose: PROFILE');
-  console.log(chalk.rgb(250, 142, 214)('USER PROFILE:'), userProfile);
+  console.log(pink('USER PROFILE:'), userProfile);
 
   let input = await inquirer.prompt([
     {
@@ -311,6 +295,7 @@ async function logout(username) {
         '\n \n May a curse of financial destitution be brought down upon your progeny.'
       )
     );
+    process.exit(0); // Will give a clean exit after timeout
   }, 9000);
 }
 
@@ -330,7 +315,7 @@ async function menu(username) {
               emoji.get('heart') +
               ' ve-Interface! \n \n'
           ) +
-        chalk.rgb(250, 142, 214).bold('What would you like to do? \n \n') +
+        pink.bold('What would you like to do? \n \n') +
         chalk
           .rgb(250, 142, 214)
           .italic(
