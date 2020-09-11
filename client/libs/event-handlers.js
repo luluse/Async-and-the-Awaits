@@ -10,14 +10,14 @@ const chalk = require('chalk');
 const emoji = require('node-emoji');
 const figlet = require('figlet');
 
-const serverChannel = io.connect(
-  'https://command-love-interface.herokuapp.com'
-);
+// const serverChannel = io.connect(
+//   'https://command-love-interface.herokuapp.com'
+// );
 let trueOrFalse = true;
-// const serverChannel = io.connect('http://localhost:3001');
+const serverChannel = io.connect('http://localhost:3001');
 
 figlet.text(
-  'Command Love interface',
+  'Command Love Interface',
   {
     font: 'Big',
     verticalLayout: 'fitted',
@@ -236,7 +236,7 @@ async function logout(username) {
     chalk.red('If you must log out, press "CTRL/CMD + C" on your keyboard.')
   );
   setTimeout(() => {
-    ui.log.write(chalk.red('\n \n Please don\t go.'));
+    ui.log.write(chalk.red('\n \n Please don\'t go.'));
   }, 1000);
   setTimeout(() => {
     ui.log.write(chalk.red('\n \n Seriously, I am begging you.'));

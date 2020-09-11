@@ -1,6 +1,6 @@
 'use strict';
-
-require('../client/libs/event-handlers.js');
+let client = require('../__mocks__/socket.io-client');
+let socket = client.connect();
 
 let {
   // login,

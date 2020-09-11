@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
   socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
     Message.create(messageFromClient); // passing in object with a key of messageFromClient and value of whatever it was
-    io.emit('received', messageFromClient);
+    socket.broadcast.emit('received', messageFromClient);
   });
 
   socket.on('disconnect', (socket) => {
