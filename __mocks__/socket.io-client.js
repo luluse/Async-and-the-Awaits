@@ -2,8 +2,8 @@
 
 let EVENTS = {};
 
-function emit(event, ,..args){
-    EVENTS[event] && EVENTS[event].forEach(func => function(...args));
+function emit(event, ...args) {
+    EVENTS[event] && EVENTS[event].forEach(func => func(...args));
 }
 
 function on(event, funct){
