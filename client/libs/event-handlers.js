@@ -181,11 +181,17 @@ async function discover(onlineUsers) {
       chalk.rgb(250, 142, 214)(`USERS ONLINE: ${onlineUsers.length}`)
     );
     onlineUsers.forEach((user) => {
-      ui.log.write('===============');
-      ui.log.write(user.username);
-      ui.log.write(user.favLanguage);
-      ui.log.write(user.description);
-      ui.log.write(user.os);
+      ui.log.write(chalk.rgb(250, 142, 214)('===================='));
+      ui.log.write(
+        chalk.rgb(250, 142, 214).bold('> Username: ', user.username)
+      );
+      ui.log.write(
+        chalk.bold('> Favorite Programming Language: ', user.favLanguage)
+      );
+      ui.log.write(
+        chalk.rgb(250, 142, 214).bold('> Operating System: ', user.os)
+      );
+      ui.log.write(chalk.bold('> About Me: ', user.description));
     });
   } else {
     ui.log.write(chalk.rgb(250, 142, 214)('No users currently online.'));
