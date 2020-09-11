@@ -10,12 +10,13 @@ const chalk = require('chalk');
 const emoji = require('node-emoji');
 const figlet = require('figlet');
 
-// const serverChannel = io.connect(
-//   'https://command-love-interface.herokuapp.com'
-// );
+const serverChannel = io.connect(
+  'https://command-love-interface.herokuapp.com'
+);
+
+// const serverChannel = io.connect('http://localhost:3001');
 
 let trueOrFalse = true;
-const serverChannel = io.connect('http://localhost:3001');
 
 figlet.text(
   'Command Love Interface',
