@@ -4,6 +4,7 @@
 require('dotenv').config();
 const inquirer = require('inquirer');
 const io = require('socket.io-client');
+const { server } = require('../server/io-server');
 const {
   login,
   createUser,
@@ -40,6 +41,16 @@ serverChannel.on('received', (messageBackFromServer) => {
   );
 });
 
+serverChannel.on('private-message-received', (privateMessageObj) => {
+  ui.log.write(
+    `New private message from: [${privateMessageObj.from}]: ${privateMessageObj.message}`
+  );
+});
+
+serverChannel.on('private-message-failed', () => {
+  ui.log.write('Private message failed to send.');
+});
+
 /////////////////// MENU OPTION LISTENERS ////////////////////
 serverChannel.on('discovered', (onlineUsers) => {
   discover(onlineUsers);
@@ -50,10 +61,5 @@ serverChannel.on('profile', (userProfile) => {
 });
 
 serverChannel.on('resume-chat-done', (payload) => {
-  // need an array from whatever emits 'resume-chat-done'
   resumeChat(payload);
 });
-
-// serverChannel.on('disconnect', () => {
-//   serverChannel.emit('disconnect');
-// });

@@ -9,12 +9,13 @@ const ui = new inquirer.ui.BottomBar();
 const chalk = require('chalk');
 const emoji = require('node-emoji');
 const figlet = require('figlet');
+const { server } = require('../../server/io-server');
 
-const serverChannel = io.connect(
-  'https://command-love-interface.herokuapp.com'
-);
+// const serverChannel = io.connect(
+//   'https://command-love-interface.herokuapp.com'
+// );
 
-// const serverChannel = io.connect('http://localhost:3001');
+const serverChannel = io.connect('http://localhost:3001');
 
 let trueOrFalse = true;
 
@@ -143,6 +144,7 @@ async function createUser() {
 
 async function validateMe(username) {
   if (username) {
+    serverChannel.username = username;
     serverChannel.emit('connected', username);
   } else {
     ui.log.write(chalk.red('Invalid login. Please try again.'));
@@ -157,20 +159,35 @@ async function getInput(username) {
     input = null;
     input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
 
-    // Desired message structure:
-    // `[${username}]: ${input.text}`;
     if (input.text === '--exit') {
       trueOrFalse = false;
       return menu(username);
+    } else if (input.text.slice(0, 9) === '--message') {
+      trueOrFalse = false;
+      return sendPrivateMessageHandler(input);
     }
+
     let messageObj = {
       message: input.text,
       sender: username,
       room: 'lobby',
     };
-
     await serverChannel.emit('message', messageObj);
   }
+}
+
+async function sendPrivateMessageHandler(input) {
+  let targetUser = input.text.match(/[a-zA-Z0-9]+\b/g)[1];
+  let privateMessage = input.text.substr(11 + targetUser.length);
+
+  let privateMessageObj = {
+    targetUser,
+    privateMessage,
+  };
+
+  serverChannel.emit('private-message-sent', privateMessageObj);
+  trueOrFalse = true;
+  getInput(serverChannel.username);
 }
 
 ////////////////////// MENU OPTION FUNCTIONS //////////////////////
@@ -208,7 +225,7 @@ async function discover(onlineUsers) {
   ]);
 
   if (input.choice === 'Back to Main Menu') {
-    return menu(); // HOW DO WE PASS IN USERNAME? NEED THIS FOR OTHER STUFF TO WORK. GLOBAL USERNAME?
+    return menu(serverChannel.username);
   }
 }
 

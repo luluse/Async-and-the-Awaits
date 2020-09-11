@@ -28,7 +28,6 @@ io.on('connection', (socket) => {
       userObj.username,
       userObj.password
     );
-    console.log('VALID USER:::::', validUser);
 
     if (!validUser) {
       socket.emit('validated', false);
@@ -50,13 +49,12 @@ io.on('connection', (socket) => {
 
   socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
-    Message.create(messageFromClient); // passing in object with a key of messageFromClient and value of whatever it was
+    Message.create(messageFromClient);
     socket.broadcast.emit('received', messageFromClient);
   });
 
   socket.on('disconnect', (socket) => {
     delete userPool[socket.username]; // knows disconnect happens and removes it from pool
-    console.log('USER POOL: ', userPool);
     console.log('Client disconnected.');
   });
 
@@ -70,6 +68,23 @@ io.on('connection', (socket) => {
   socket.on('profile', async (userProfile) => {
     const user = await User.find({ username: userProfile }, { password: 0 });
     socket.emit('profile', user);
+  });
+
+  socket.on('private-message-sent', (privateMessageObj) => {
+    const { targetUser, privateMessage } = privateMessageObj;
+
+    if (userPool[targetUser]) {
+      let privateMessageToSend = {
+        from: socket.username,
+        message: privateMessage,
+      };
+
+      socket
+        .to(userPool[targetUser].id)
+        .emit('private-message-received', privateMessageToSend);
+    } else {
+      socket.emit('private-message-failed');
+    }
   });
 
   socket.on('resumeChat', async (username) => {
