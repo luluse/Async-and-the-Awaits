@@ -1,6 +1,5 @@
 'use strict';
 
-
 let {
   // login,
   // createUser,
@@ -29,7 +28,7 @@ it('should write "Invalid login. Please try again." when validateMe is called wi
   expect(ui.log.write).toHaveBeenCalled();
 });
 it('should write same number of items called with discover()', () => {
-  ui.log.write = jest.fn()
+  ui.log.write = jest.fn();
   let testArr = ['omg', 'ttyl', 'totes'];
   discover(testArr);
   expect(ui.log.write).toHaveBeenCalledTimes(5);
@@ -39,9 +38,9 @@ it.skip('calling chat should call getInput() with username as an argument', asyn
   // const spy = getInput.mockImplementation();
   const getInput = jest.fn();
   let username = 'beasleydotcom';
-  
+
   newChat(username);
- 
+
   // let thomas = await getInput;
   expect(getInput).toHaveBeenCalled();
   // you might need to do a __mocks__ thingy
@@ -60,12 +59,10 @@ it('should call ui.log.write 6 times when logout is called', () => {
 it('should console.log inside of profile', () => {
   console.log = jest.fn();
 
-  profile({username});
-  expect(console.log).toHaveBeenCalled()
+  profile({ username });
+  expect(console.log).toHaveBeenCalled();
   //change this to calledWith once you know what we are going to say for this.
 });
 
-it('should ', () => {
-  
-});
+it('should ', () => {});
 // const happy = Promise.resolve({loginChoice: 'Log In'});
