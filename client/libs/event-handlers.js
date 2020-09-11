@@ -174,14 +174,18 @@ async function getInput(username) {
 
 ////////////////////// MENU OPTION FUNCTIONS //////////////////////
 
-async function discover(userPoolArr) {
+async function discover(onlineUsers) {
   ui.log.write('You chose: DISCOVER');
-  if (userPoolArr.length) {
+  if (onlineUsers.length) {
     ui.log.write(
-      chalk.rgb(250, 142, 214)(`USERS ONLINE: ${userPoolArr.length}`)
+      chalk.rgb(250, 142, 214)(`USERS ONLINE: ${onlineUsers.length}`)
     );
-    userPoolArr.forEach((user) => {
-      ui.log.write(user);
+    onlineUsers.forEach((user) => {
+      ui.log.write('===============');
+      ui.log.write(user.username);
+      ui.log.write(user.favLanguage);
+      ui.log.write(user.description);
+      ui.log.write(user.os);
     });
   } else {
     ui.log.write(chalk.rgb(250, 142, 214)('No users currently online.'));

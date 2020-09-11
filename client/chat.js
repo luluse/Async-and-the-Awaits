@@ -41,8 +41,8 @@ serverChannel.on('received', (messageBackFromServer) => {
 });
 
 /////////////////// MENU OPTION LISTENERS ////////////////////
-serverChannel.on('discover', (userPoolArr) => {
-  discover(userPoolArr);
+serverChannel.on('discovered', (onlineUsers) => {
+  discover(onlineUsers);
 });
 
 serverChannel.on('profile', (userProfile) => {

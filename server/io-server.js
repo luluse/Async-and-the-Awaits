@@ -28,6 +28,7 @@ io.on('connection', (socket) => {
       userObj.username,
       userObj.password
     );
+    console.log('VALID USER:::::', validUser);
 
     if (!validUser) {
       socket.emit('validated', false);
@@ -36,7 +37,14 @@ io.on('connection', (socket) => {
       // At this point, username is known all the time
       socket.emit('validated', userObj.username);
       // userPool[socket.username] - tries to FIND a key, and if it doesn't, ADDS one
-      userPool[socket.username] = { username: socket.username, id: socket.id };
+      // every username in userpool will be equal to an OBJECT
+      userPool[socket.username] = {
+        username: socket.username,
+        id: socket.id,
+        favLanguage: validUser.favLanguage,
+        description: validUser.description,
+        os: validUser.os,
+      };
     }
   });
 
@@ -55,13 +63,8 @@ io.on('connection', (socket) => {
   /////////////////// MENU OPTION LISTENERS ////////////////////
 
   socket.on('discover', async () => {
-    let onlineUsers = Object.keys(userPool);
-    let fullUserProfiles = onlineUsers.forEach(async (user) => {
-      // console.log('USER:', user.toString());
-      await User.find({ username: user });
-    });
-    console.log('FULL ****', fullUserProfiles);
-    socket.emit('discover', onlineUsers);
+    let onlineUsers = Object.values(userPool);
+    socket.emit('discovered', onlineUsers);
   });
 
   socket.on('profile', async (userProfile) => {
