@@ -308,36 +308,26 @@ async function menu(username) {
       message:
         '\n' +
         chalk.bgMagenta('Beauty is in the Back End \n') +
-        chalk
-          .rgb(250, 142, 214)
-          .bold(
-            '\nWelcome to the Command-L' +
-              emoji.get('heart') +
-              ' ve-Interface! \n \n'
-          ) +
+        pink.bold(
+          '\nWelcome to the Command-L' +
+            emoji.get('heart') +
+            ' ve-Interface! \n \n'
+        ) +
         pink.bold('What would you like to do? \n \n') +
-        chalk
-          .rgb(250, 142, 214)
-          .italic(
-            '- Discover ' +
-              emoji.get('eyes') +
-              "  : See other coders' profiles \n"
-          ) +
-        chalk
-          .rgb(250, 142, 214)
-          .italic(
-            '- Chat ' +
-              emoji.get('speech_balloon') +
-              '  : with hot bots like you \n'
-          ) +
-        chalk
-          .rgb(250, 142, 214)
-          .italic(
-            '- Profile ' + emoji.get('fire') + '  : update your profile \n'
-          ) +
-        chalk
-          .rgb(250, 142, 214)
-          .italic('- Logout ' + emoji.get('x') + "  : don't go... \n \n"),
+        pink.italic(
+          '- Discover ' +
+            emoji.get('eyes') +
+            "  : See other coders' profiles \n"
+        ) +
+        pink.italic(
+          '- Chat ' +
+            emoji.get('speech_balloon') +
+            '  : with hot bots like you \n'
+        ) +
+        pink.italic(
+          '- Profile ' + emoji.get('fire') + '  : update your profile \n'
+        ) +
+        pink.italic('- Logout ' + emoji.get('x') + "  : don't go... \n \n"),
       choices: ['Discover', 'New Chat', 'Resume Chat', 'Profile', 'Logout'],
     },
   ]);
@@ -360,7 +350,6 @@ async function menu(username) {
     );
   }
 }
-
 
 module.exports = {
   login,
