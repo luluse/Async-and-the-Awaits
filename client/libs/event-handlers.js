@@ -197,6 +197,19 @@ async function discover(onlineUsers) {
   } else {
     ui.log.write(chalk.rgb(250, 142, 214)('No users currently online.'));
   }
+
+  let input = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: 'Options: ',
+      choices: ['Back to Main Menu'],
+    },
+  ]);
+
+  if (input.choice === 'Back to Main Menu') {
+    return menu(); // HOW DO WE PASS IN USERNAME? NEED THIS FOR OTHER STUFF TO WORK. GLOBAL USERNAME?
+  }
 }
 
 async function newChat(username) {
@@ -208,8 +221,6 @@ async function newChat(username) {
 }
 
 async function resumeChat(payload) {
-  // "messages"
-  // Remember: Getting back many/an array of objects (each with sender, message keys)
   payload.messages.forEach((message) => {
     ui.log.write(`[${message.sender}]: ${message.message}`);
   });
@@ -223,9 +234,6 @@ async function resumeChat(payload) {
 async function profile(userProfile) {
   ui.log.write('You chose: PROFILE');
   console.log(chalk.rgb(250, 142, 214)('USER PROFILE:'), userProfile);
-
-  // for (const [key, value] of Object.entries(userProfile)) {
-  //   console.log(`${key}: ${value}`);
 
   let input = await inquirer.prompt([
     {
@@ -270,8 +278,6 @@ async function logout(username) {
       )
     );
   }, 9000);
-
-  // serverChannel.emit('disconnect', username); //????????????????
 }
 
 // MAIN MENU FUNCTION
@@ -316,12 +322,13 @@ async function menu(username) {
       choices: ['Discover', 'New Chat', 'Resume Chat', 'Profile', 'Logout'],
     },
   ]);
+
   if (input.menuChoice === 'Discover') {
     serverChannel.emit('discover');
   } else if (input.menuChoice === 'New Chat') {
     return newChat(username);
   } else if (input.menuChoice === 'Resume Chat') {
-    serverChannel.emit('resumeChat', username); // username will be a string
+    serverChannel.emit('resumeChat', username);
   } else if (input.menuChoice === 'Profile') {
     serverChannel.emit('profile', username);
   } else if (input.menuChoice === 'Logout') {
@@ -347,7 +354,6 @@ module.exports = {
   profile,
   logout,
   resumeChat,
-  // sendMessage,
   serverChannel,
   ui,
 };
