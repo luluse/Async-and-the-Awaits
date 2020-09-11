@@ -13,11 +13,11 @@ const figlet = require('figlet');
 const serverChannel = io.connect(
   'https://command-love-interface.herokuapp.com'
 );
-
+let trueOrFalse = true;
 // const serverChannel = io.connect('http://localhost:3001');
 
 figlet.text(
-  'Command Love interface',
+  'Command Love Interface',
   {
     font: 'Big',
     verticalLayout: 'fitted',
@@ -151,13 +151,16 @@ async function validateMe(username) {
 async function getInput(username) {
   let input;
   // eslint-disable-next-line no-constant-condition
-  while (true) {
+  while (trueOrFalse) {
     input = null;
     input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
 
     // Desired message structure:
     // `[${username}]: ${input.text}`;
-
+    if(input.text === '--exit'){
+      trueOrFalse = false;
+      return menu(username);
+    }
     let messageObj = {
       message: input.text,
       sender: username,
@@ -185,6 +188,9 @@ async function discover(userPoolArr) {
 }
 
 async function newChat(username) {
+  ui.log.write(
+    chalk.rgb(250, 142, 214)('Enter: \'--exit\' to return to the main menu'));
+  trueOrFalse=true;
   getInput(username);
 }
 
@@ -194,6 +200,9 @@ async function resumeChat(payload) {
   payload.messages.forEach((message) => {
     ui.log.write(`[${message.sender}]: ${message.message}`);
   });
+  trueOrFalse=true;
+  ui.log.write(
+    chalk.rgb(250, 142, 214)('Enter: \'--exit\' to return to the main menu'));
   getInput(payload.username); // needs to happen here
 }
 
@@ -204,14 +213,21 @@ async function profile(userProfile) {
   // for (const [key, value] of Object.entries(userProfile)) {
   //   console.log(`${key}: ${value}`);
 
-  // let input = await inquirer.prompt([
-  //   {
-  //     type: 'list',
-  //     name: 'choice',
-  //     message: 'Options: ',
-  //     choices: ['Show My Profile', 'Back to Main Menu', 'Logout'],
-  //   },
-  // ]);
+  let input = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: 'Options: ',
+      choices: ['Back to Main Menu', 'Logout'],
+    },
+  ]);
+  if(input.choice === 'Back to Main Menu'){
+    return menu(userProfile.username);
+  }
+  else if(input.choice === 'Logout'){
+    return logout(userProfile.username);
+  }
+  else profile(userProfile);
 }
 
 // User needs to manually exit
@@ -220,7 +236,7 @@ async function logout(username) {
     chalk.red('If you must log out, press "CTRL/CMD + C" on your keyboard.')
   );
   setTimeout(() => {
-    ui.log.write(chalk.red('\n \n Please don\t go.'));
+    ui.log.write(chalk.red('\n \n Please don\'t go.'));
   }, 1000);
   setTimeout(() => {
     ui.log.write(chalk.red('\n \n Seriously, I am begging you.'));
