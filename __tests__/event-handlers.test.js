@@ -1,6 +1,6 @@
 'use strict';
 let client = require('../__mocks__/socket.io-client');
-let socket = client.connect();
+let serverChannel = client.connect();
 
 let {
   // login,
@@ -20,6 +20,10 @@ let {
   logout,
   profile,
 } = require('../client/libs/event-handlers.js');
+
+let client = require('../__mocks__/socket.io-client');
+let serverChannel = client.connect();
+
 let username = 'beasleydotcom';
 jest.useFakeTimers();
 it('should write "Invalid login. Please try again." when validateMe is called with bad username', async () => {
