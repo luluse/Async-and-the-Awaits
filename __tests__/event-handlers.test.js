@@ -1,16 +1,15 @@
 'use strict';
-let client = require('../__mocks__/socket.io-client');
-let serverChannel = client.connect();
+
 
 let {
   // login,
   // createUser,
   // loginOrCreate,
   // validateMe,
-  getInput,
+  // getInput,
   // menu,
   discover,
-  chat,
+  newChat,
   // profile,
   // logout,
   // sendMessage,
@@ -21,10 +20,7 @@ let {
   profile,
 } = require('../client/libs/event-handlers.js');
 
-let client = require('../__mocks__/socket.io-client');
-let serverChannel = client.connect();
-
-let username = 'beasleydotcom';
+let username = 'honkyTonkyMusaic';
 jest.useFakeTimers();
 it('should write "Invalid login. Please try again." when validateMe is called with bad username', async () => {
   ui.log.write = jest.fn();
@@ -40,13 +36,14 @@ it('should write same number of items called with discover()', () => {
 });
 
 it.skip('calling chat should call getInput() with username as an argument', async () => {
-  getInput = jest.fn();
+  // const spy = getInput.mockImplementation();
+  const getInput = jest.fn();
   let username = 'beasleydotcom';
   
-  chat(username);
+  newChat(username);
  
   // let thomas = await getInput;
-  expect(getInput()).toHaveBeenCalled();
+  expect(getInput).toHaveBeenCalled();
   // you might need to do a __mocks__ thingy
 });
 
@@ -68,3 +65,7 @@ it('should console.log inside of profile', () => {
   //change this to calledWith once you know what we are going to say for this.
 });
 
+it('should ', () => {
+  
+});
+// const happy = Promise.resolve({loginChoice: 'Log In'});

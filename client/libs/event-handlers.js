@@ -9,12 +9,15 @@ const ui = new inquirer.ui.BottomBar();
 const chalk = require('chalk');
 const emoji = require('node-emoji');
 const figlet = require('figlet');
+const pink = chalk.rgb(250, 142, 214);
 
 const serverChannel = io.connect(
   'https://command-love-interface.herokuapp.com'
 );
-let trueOrFalse = true;
+
 // const serverChannel = io.connect('http://localhost:3001');
+
+let trueOrFalse = true;
 
 figlet.text(
   'Command Love Interface',
@@ -39,7 +42,7 @@ async function loginOrCreate() {
     {
       type: 'list',
       name: 'loginChoice',
-      message: chalk.rgb(250, 142, 214).bold('Please log in or sign up!'),
+      message: pink.bold('Please log in or sign up!'),
       choices: ['Log In', 'Sign Up'],
     },
   ]);
@@ -130,17 +133,16 @@ async function createUser() {
   serverChannel.emit('signup', newUser);
 
   ui.log.write(
-    chalk
-      .rgb(250, 142, 214)
-      .bold(
-        `Welcome to the Command-Love-Interface, ${newUser.username}! Please log in to get started.`
-      )
+    pink.bold(
+      `Welcome to the Command-Love-Interface, ${newUser.username}! Please log in to get started.`
+    )
   );
   login();
 }
 
 async function validateMe(username) {
   if (username) {
+    serverChannel.username = username;
     serverChannel.emit('connected', username);
   } else {
     ui.log.write(chalk.red('Invalid login. Please try again.'));
@@ -155,63 +157,101 @@ async function getInput(username) {
     input = null;
     input = await inquirer.prompt([{ name: 'text', message: ' ' }]);
 
-    // Desired message structure:
-    // `[${username}]: ${input.text}`;
-    if(input.text === '--exit'){
+    if (input.text === '--exit') {
       trueOrFalse = false;
       return menu(username);
+    } else if (input.text.slice(0, 3) === '---') {
+      trueOrFalse = false;
+      return sendPrivateMessageHandler(input);
     }
+
     let messageObj = {
       message: input.text,
       sender: username,
       room: 'lobby',
     };
 
-    await serverChannel.emit('message', messageObj);
+    if (input.text) {
+      await serverChannel.emit('message', messageObj);
+    }
   }
+}
+
+async function sendPrivateMessageHandler(input) {
+  let targetUser = input.text.match(/[a-zA-Z0-9]+\b/g)[0];
+  let privateMessage = input.text.substr(4 + targetUser.length);
+
+  let privateMessageObj = {
+    targetUser,
+    privateMessage,
+  };
+
+  serverChannel.emit('private-message-sent', privateMessageObj);
+  trueOrFalse = true;
+  getInput(serverChannel.username);
 }
 
 ////////////////////// MENU OPTION FUNCTIONS //////////////////////
 
-async function discover(userPoolArr) {
+async function discover(onlineUsers) {
   ui.log.write('You chose: DISCOVER');
-  if (userPoolArr.length) {
-    ui.log.write(
-      chalk.rgb(250, 142, 214)(`USERS ONLINE: ${userPoolArr.length}`)
-    );
-    userPoolArr.forEach((user) => {
-      ui.log.write(user);
+  if (onlineUsers.length) {
+    ui.log.write(pink(`USERS ONLINE: ${onlineUsers.length}`));
+    onlineUsers.forEach((user) => {
+      ui.log.write(pink('===================='));
+      ui.log.write(pink.bold('> Username: ', user.username));
+      ui.log.write(
+        chalk.bold('> Favorite Programming Language: ', user.favLanguage)
+      );
+      ui.log.write(pink.bold('> Operating System: ', user.os));
+      ui.log.write(chalk.bold('> About Me: ', user.description));
     });
   } else {
-    ui.log.write(chalk.rgb(250, 142, 214)('No users currently online.'));
+    ui.log.write(pink('No users currently online.'));
+  }
+
+  let input = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: 'Options: ',
+      choices: ['Back to Main Menu'],
+    },
+  ]);
+
+  if (input.choice === 'Back to Main Menu') {
+    return menu(serverChannel.username);
   }
 }
 
 async function newChat(username) {
+  ui.log.write(pink("Enter: '--exit' to return to the main menu"));
   ui.log.write(
-    chalk.rgb(250, 142, 214)('Enter: \'--exit\' to return to the main menu'));
-  trueOrFalse=true;
+    pink(
+      "Enter: '---<username>' to send a private message to the specified user"
+    )
+  );
+  trueOrFalse = true;
   getInput(username);
 }
 
 async function resumeChat(payload) {
-  // "messages"
-  // Remember: Getting back many/an array of objects (each with sender, message keys)
   payload.messages.forEach((message) => {
     ui.log.write(`[${message.sender}]: ${message.message}`);
   });
-  trueOrFalse=true;
+  trueOrFalse = true;
+  ui.log.write(pink("Enter: '--exit' to return to the main menu"));
   ui.log.write(
-    chalk.rgb(250, 142, 214)('Enter: \'--exit\' to return to the main menu'));
+    pink(
+      "Enter: '---<username>' to send a private message to the specified user"
+    )
+  );
   getInput(payload.username); // needs to happen here
 }
 
 async function profile(userProfile) {
   ui.log.write('You chose: PROFILE');
-  console.log(chalk.rgb(250, 142, 214)('USER PROFILE:'), userProfile);
-
-  // for (const [key, value] of Object.entries(userProfile)) {
-  //   console.log(`${key}: ${value}`);
+  console.log(pink('USER PROFILE:'), userProfile);
 
   let input = await inquirer.prompt([
     {
@@ -221,13 +261,11 @@ async function profile(userProfile) {
       choices: ['Back to Main Menu', 'Logout'],
     },
   ]);
-  if(input.choice === 'Back to Main Menu'){
+  if (input.choice === 'Back to Main Menu') {
     return menu(userProfile.username);
-  }
-  else if(input.choice === 'Logout'){
+  } else if (input.choice === 'Logout') {
     return logout(userProfile.username);
-  }
-  else profile(userProfile);
+  } else profile(userProfile);
 }
 
 // User needs to manually exit
@@ -236,7 +274,7 @@ async function logout(username) {
     chalk.red('If you must log out, press "CTRL/CMD + C" on your keyboard.')
   );
   setTimeout(() => {
-    ui.log.write(chalk.red('\n \n Please don\'t go.'));
+    ui.log.write(chalk.red("\n \n Please don't go."));
   }, 1000);
   setTimeout(() => {
     ui.log.write(chalk.red('\n \n Seriously, I am begging you.'));
@@ -257,9 +295,8 @@ async function logout(username) {
         '\n \n May a curse of financial destitution be brought down upon your progeny.'
       )
     );
+    process.exit(0); // Will give a clean exit after timeout
   }, 9000);
-
-  // serverChannel.emit('disconnect', username); //????????????????
 }
 
 // MAIN MENU FUNCTION
@@ -271,47 +308,38 @@ async function menu(username) {
       message:
         '\n' +
         chalk.bgMagenta('Beauty is in the Back End \n') +
-        chalk
-          .rgb(250, 142, 214)
-          .bold(
-            '\nWelcome to the Command-L' +
-              emoji.get('heart') +
-              ' ve-Interface! \n \n'
-          ) +
-        chalk.rgb(250, 142, 214).bold('What would you like to do? \n \n') +
-        chalk
-          .rgb(250, 142, 214)
-          .italic(
-            '- Discover ' +
-              emoji.get('eyes') +
-              "  : See other coders' profiles \n"
-          ) +
-        chalk
-          .rgb(250, 142, 214)
-          .italic(
-            '- Chat ' +
-              emoji.get('speech_balloon') +
-              '  : with hot bots like you \n'
-          ) +
-        chalk
-          .rgb(250, 142, 214)
-          .italic(
-            '- Profile ' + emoji.get('fire') + '  : update your profile \n'
-          ) +
-        chalk
-          .rgb(250, 142, 214)
-          .italic('- Logout ' + emoji.get('x') + "  : don't go... \n \n"),
+        pink.bold(
+          '\nWelcome to the Command-L' +
+            emoji.get('heart') +
+            ' ve-Interface! \n \n'
+        ) +
+        pink.bold('What would you like to do? \n \n') +
+        pink.italic(
+          '- Discover ' +
+            emoji.get('eyes') +
+            "  : See other coders' profiles \n"
+        ) +
+        pink.italic(
+          '- Chat ' +
+            emoji.get('speech_balloon') +
+            '  : with hot bots like you \n'
+        ) +
+        pink.italic(
+          '- Profile ' + emoji.get('fire') + '  : update your profile \n'
+        ) +
+        pink.italic('- Logout ' + emoji.get('x') + "  : don't go... \n \n"),
       choices: ['Discover', 'New Chat', 'Resume Chat', 'Profile', 'Logout'],
     },
   ]);
+
   if (input.menuChoice === 'Discover') {
     serverChannel.emit('discover');
   } else if (input.menuChoice === 'New Chat') {
     return newChat(username);
   } else if (input.menuChoice === 'Resume Chat') {
-    serverChannel.emit('resumeChat', username); // username will be a string
+    serverChannel.emit('resumeChat', username);
   } else if (input.menuChoice === 'Profile') {
-    serverChannel.emit('profile', username);
+    serverChannel.emit('profile', serverChannel.username);
   } else if (input.menuChoice === 'Logout') {
     return logout(username);
   } else {
@@ -335,7 +363,6 @@ module.exports = {
   profile,
   logout,
   resumeChat,
-  // sendMessage,
   serverChannel,
   ui,
 };

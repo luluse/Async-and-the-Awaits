@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 'use strict';
 
 require('dotenv').config();
@@ -36,50 +35,59 @@ io.on('connection', (socket) => {
       // At this point, username is known all the time
       socket.emit('validated', userObj.username);
       // userPool[socket.username] - tries to FIND a key, and if it doesn't, ADDS one
-      userPool[socket.username] = { username: socket.username, id: socket.id };
+      // every username in userpool will be equal to an OBJECT
+      userPool[socket.username] = {
+        username: socket.username,
+        id: socket.id,
+        favLanguage: validUser.favLanguage,
+        description: validUser.description,
+        os: validUser.os,
+      };
     }
   });
 
-  // socket.on('chatRequest', request =>{
-  //   let room1 = request.from+'_'+request.to;
-  //   console.log('chatRequest');
-  //   socket.join(room1);
-  //   socket.emit('startChat', room1);
-  // });
-
   socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
-    Message.create(messageFromClient); // passing in object with a key of messageFromClient and value of whatever it was
+    Message.create(messageFromClient);
     socket.broadcast.emit('received', messageFromClient);
   });
 
   socket.on('disconnect', (socket) => {
     delete userPool[socket.username]; // knows disconnect happens and removes it from pool
-    console.log('USER POOL: ', userPool);
     console.log('Client disconnected.');
   });
 
   /////////////////// MENU OPTION LISTENERS ////////////////////
-  socket.on('discover', () => {
-    let onlineUsers = Object.keys(userPool);
-    socket.emit('discover', onlineUsers);
+
+  socket.on('discover', async () => {
+    let onlineUsers = Object.values(userPool);
+    socket.emit('discovered', onlineUsers);
   });
 
   socket.on('profile', async (userProfile) => {
-    const user = await User.find({ username: userProfile });
+    const user = await User.find({ username: userProfile }, { password: 0 });
     socket.emit('profile', user);
   });
 
-  socket.on('resumeChat', async (username) => {
-    // needs to have username on it
-    // Ideal payload: sender/recipient and/or room
-    // Just need to get array of objects from server
-    const messagesArr = await Message.find({}); // this will find ALL messages stored - whereas { sender: username } will get own messages ONLY
-    // let messagesArr = [
-    //   { message: 'Test message', sender: 'TestMan', room: 'lobby' },
-    //   { message: 'Test message 2', sender: 'TestMan', room: 'lobby' },
-    // ];
+  socket.on('private-message-sent', (privateMessageObj) => {
+    const { targetUser, privateMessage } = privateMessageObj;
 
+    if (userPool[targetUser]) {
+      let privateMessageToSend = {
+        from: socket.username,
+        message: privateMessage,
+      };
+
+      socket
+        .to(userPool[targetUser].id)
+        .emit('private-message-received', privateMessageToSend);
+    } else {
+      socket.emit('private-message-failed');
+    }
+  });
+
+  socket.on('resumeChat', async (username) => {
+    const messagesArr = await Message.find({});
     socket.emit('resume-chat-done', {
       messages: messagesArr,
       username: username, // SOON: Require "ROOM" as well (will have to be an object)
