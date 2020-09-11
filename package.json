@@ -1,0 +1,39 @@
+{
+  "name": "Async-and-the-Awaits",
+  "version": "1.0.0",
+  "description": "Code401 Midterm Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --coverage --verbose --forceExit",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Async-and-the-Awaits/Async-and-the-Awaits.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Async-and-the-Awaits/Async-and-the-Awaits/issues"
+  },
+  "engines": {
+    "node": "14.8.0"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "chalk": "^4.1.0",
+    "dotenv": "^8.2.0",
+    "figlet": "^1.5.0",
+    "inquirer": "^7.3.3",
+    "mongoose": "^5.10.3",
+    "node-emoji": "^1.10.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 2
+  },
+  "homepage": "https://github.com/Async-and-the-Awaits/Async-and-the-Awaits#readme"
+}
