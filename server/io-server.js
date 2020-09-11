@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 'use strict';
 
 require('dotenv').config();
@@ -88,15 +87,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('resumeChat', async (username) => {
-    // needs to have username on it
-    // Ideal payload: sender/recipient and/or room
-    // Just need to get array of objects from server
-    const messagesArr = await Message.find({}); // this will find ALL messages stored - whereas { sender: username } will get own messages ONLY
-    // let messagesArr = [
-    //   { message: 'Test message', sender: 'TestMan', room: 'lobby' },
-    //   { message: 'Test message 2', sender: 'TestMan', room: 'lobby' },
-    // ];
-
+    const messagesArr = await Message.find({});
     socket.emit('resume-chat-done', {
       messages: messagesArr,
       username: username, // SOON: Require "ROOM" as well (will have to be an object)

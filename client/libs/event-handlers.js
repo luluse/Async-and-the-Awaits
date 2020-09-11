@@ -11,11 +11,11 @@ const emoji = require('node-emoji');
 const figlet = require('figlet');
 const { server } = require('../../server/io-server');
 
-// const serverChannel = io.connect(
-//   'https://command-love-interface.herokuapp.com'
-// );
+const serverChannel = io.connect(
+  'https://command-love-interface.herokuapp.com'
+);
 
-const serverChannel = io.connect('http://localhost:3001');
+// const serverChannel = io.connect('http://localhost:3001');
 
 let trueOrFalse = true;
 
@@ -162,7 +162,7 @@ async function getInput(username) {
     if (input.text === '--exit') {
       trueOrFalse = false;
       return menu(username);
-    } else if (input.text.slice(0, 9) === '--message') {
+    } else if (input.text.slice(0, 3) === '---') {
       trueOrFalse = false;
       return sendPrivateMessageHandler(input);
     }
@@ -172,13 +172,16 @@ async function getInput(username) {
       sender: username,
       room: 'lobby',
     };
-    await serverChannel.emit('message', messageObj);
+
+    if (input.text) {
+      await serverChannel.emit('message', messageObj);
+    }
   }
 }
 
 async function sendPrivateMessageHandler(input) {
-  let targetUser = input.text.match(/[a-zA-Z0-9]+\b/g)[1];
-  let privateMessage = input.text.substr(11 + targetUser.length);
+  let targetUser = input.text.match(/[a-zA-Z0-9]+\b/g)[0];
+  let privateMessage = input.text.substr(4 + targetUser.length);
 
   let privateMessageObj = {
     targetUser,
@@ -229,9 +232,16 @@ async function discover(onlineUsers) {
   }
 }
 
+const pink = chalk.rgb(250, 142, 214);
+
 async function newChat(username) {
+  ui.log.write(pink("Enter: '--exit' to return to the main menu"));
   ui.log.write(
-    chalk.rgb(250, 142, 214)("Enter: '--exit' to return to the main menu")
+    chalk.rgb(
+      250,
+      142,
+      214
+    )("Enter: '---<username>' to send a private message to the specified user")
   );
   trueOrFalse = true;
   getInput(username);
@@ -244,6 +254,13 @@ async function resumeChat(payload) {
   trueOrFalse = true;
   ui.log.write(
     chalk.rgb(250, 142, 214)("Enter: '--exit' to return to the main menu")
+  );
+  ui.log.write(
+    chalk.rgb(
+      250,
+      142,
+      214
+    )("Enter: '---<username>' to send a private message to the specified user")
   );
   getInput(payload.username); // needs to happen here
 }
@@ -347,7 +364,7 @@ async function menu(username) {
   } else if (input.menuChoice === 'Resume Chat') {
     serverChannel.emit('resumeChat', username);
   } else if (input.menuChoice === 'Profile') {
-    serverChannel.emit('profile', username);
+    serverChannel.emit('profile', serverChannel.username);
   } else if (input.menuChoice === 'Logout') {
     return logout(username);
   } else {
