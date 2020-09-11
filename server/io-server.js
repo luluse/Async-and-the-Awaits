@@ -40,13 +40,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // socket.on('chatRequest', request =>{
-  //   let room1 = request.from+'_'+request.to;
-  //   console.log('chatRequest');
-  //   socket.join(room1);
-  //   socket.emit('startChat', room1);
-  // });
-
   socket.on('message', (messageFromClient) => {
     console.log('Received: ', messageFromClient);
     Message.create(messageFromClient); // passing in object with a key of messageFromClient and value of whatever it was
@@ -60,13 +53,19 @@ io.on('connection', (socket) => {
   });
 
   /////////////////// MENU OPTION LISTENERS ////////////////////
-  socket.on('discover', () => {
+
+  socket.on('discover', async () => {
     let onlineUsers = Object.keys(userPool);
+    let fullUserProfiles = onlineUsers.forEach(async (user) => {
+      // console.log('USER:', user.toString());
+      await User.find({ username: user });
+    });
+    console.log('FULL ****', fullUserProfiles);
     socket.emit('discover', onlineUsers);
   });
 
   socket.on('profile', async (userProfile) => {
-    const user = await User.find({ username: userProfile });
+    const user = await User.find({ username: userProfile }, { password: 0 });
     socket.emit('profile', user);
   });
 
