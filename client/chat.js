@@ -4,7 +4,7 @@
 require('dotenv').config();
 const inquirer = require('inquirer');
 const io = require('socket.io-client');
-const { server } = require('../server/io-server');
+const chalk = require('chalk');
 const {
   login,
   createUser,
@@ -43,7 +43,9 @@ serverChannel.on('received', (messageBackFromServer) => {
 
 serverChannel.on('private-message-received', (privateMessageObj) => {
   ui.log.write(
-    `New private message from: [${privateMessageObj.from}]: ${privateMessageObj.message}`
+    chalk.green(
+      `New private message from: [${privateMessageObj.from}]: ${privateMessageObj.message}`
+    )
   );
 });
 
