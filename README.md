@@ -1,5 +1,13 @@
 # Command Love Interface
 
+## Setup
+
+- Clone down this repo locally
+- cd into `client` folder
+- turn on `chat.js` using `node chat.js`
+- login or sign up to use the app
+
+
 ## Async and the Awaits
 
 Code401 Midterm Project
