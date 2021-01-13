@@ -12,6 +12,8 @@
 
 Code401 Midterm Project
 
+![CLI welcome page](./assets/cli1.png)
+
 ### Members
 
 - Lulu Sevignon
@@ -19,14 +21,12 @@ Code401 Midterm Project
 - Joshua Beasley
 - Stephen Baldock
 
-### Project Proposal
 
-**Project Name**
+**Project Name: Command Love Interface**
 
-**Command Love Interface**
-[command-love-interface.herokuapp.com](https://command-love-interface.herokuapp.com/)
+Server deployed on Heroku: [command-love-interface.herokuapp.com](https://command-love-interface.herokuapp.com/)
 
-**Project Short Description**
+## Project Proposal
 
 For lonely, overworked developers who suffer from increasing social paralysis and the impact of COVID-19. Meet the love of your life without leaving the terminal with the dating app for backend developers. Connect about your common languages, learn all of the great features of ES6, and enjoy unlimited messages for a low, low monthly subscription.
 
@@ -56,6 +56,18 @@ For lonely, overworked developers who suffer from increasing social paralysis an
   document individual work loads
   - [Trello](https://trello.com/b/p7RLAdR7/team-beasley)
 - GitHub will server as a central repository for all working code and completed steps
+
+### Technologies
+- JavaScript
+- Node.js
+- Socket.io
+- MongoDB Atlas
+- Heroku
+
+### Style 
+- Chalk
+- Figlet
+- Node Emoji
 
 ### Conflict Plan
 
@@ -88,3 +100,4 @@ For lonely, overworked developers who suffer from increasing social paralysis an
 ## Entity Relationship Diagram
 
 ![database](./assets/erd.png)
+
