@@ -48,7 +48,7 @@
 - User engages a potential match via terminal chat window
 - User may save potential match to a favorites database
 
-### Non-Functional Requirements (301 & 401 only)
+### Non-Functional Requirements 
 
 Usability
 
