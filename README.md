@@ -1,6 +1,6 @@
 <p align="center">
   <a href="">
-    <img alt="node" src="./assets/nodejs.png" width="60" />
+    <img alt="node" src="./assets/Nodejs.png" width="60" />
   </a>
 </p>
 
