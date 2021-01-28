@@ -18,7 +18,7 @@
 
 Code401 Midterm Project
 
-<img alt="cli" src="./assets/cli1.png" width="300" />
+<img alt="cli" src="./assets/cli1.png" width="400" />
 
 
 ### Members
