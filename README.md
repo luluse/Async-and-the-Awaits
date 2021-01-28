@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="">
+    <img alt="node" src="./assets/node.js.png" width="60" />
+  </a>
+</p>
+
 # Command Love Interface
 
 ## Setup
@@ -12,7 +18,8 @@
 
 Code401 Midterm Project
 
-![CLI welcome page](./assets/cli1.png)
+<img alt="cli" src="./assets/cli1.png" width="300" />
+
 
 ### Members
 
@@ -99,5 +106,7 @@ For lonely, overworked developers who suffer from increasing social paralysis an
 
 ## Entity Relationship Diagram
 
-![database](./assets/erd.png)
+<img alt="cli" src="./assets/erd.png" width="400" />
 
+## Software Requirements
+Please visit this link to view the [Software Requirements](./requirements.md)
